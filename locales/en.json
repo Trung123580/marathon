@@ -1,0 +1,71 @@
+{
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
+  },
+  "events": {
+    "upcomingEvents": "Upcoming Events",
+    "viewPhotos": "View Photos",
+    "loadMore": "Load More"
+  },
+  "event": {
+    "date": "Date",
+    "description": "Description",
+    "registerNow": "Register Now",
+    "photos": "Event Photos",
+    "notFound": "Event not found"
+  },
+  "login": {
+    "title": "Login",
+    "email": "Email",
+    "password": "Password",
+    "submit": "Submit",
+    "error": "Invalid email or password",
+    "noAccount": "Don't have an account?",
+    "register": "Register here"
+  },
+  "register": {
+    "title": "Register",
+    "name": "Name",
+    "email": "Email",
+    "password": "Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Submit",
+    "haveAccount": "Already have an account?",
+    "login": "Login here"
+  },
+  "common": {
+    "home": "Home",
+    "events": "Events",
+    "news": "News",
+    "about": "About",
+    "contact": "Contact",
+    "login": "Login",
+    "register": "Register",
+    "logout": "Logout"
+  },
+  "search": {
+    "selectEvents": "Select or search events",
+    "event1": "Marathon 2023",
+    "event2": "Half Marathon 2023",
+    "event3": "10K Run 2023",
+    "button": "Search"
+  },
+  "about": {
+    "title": "About Us",
+    "content1": "Welcome to our Marathon Event Photo platform.",
+    "content2": "We are dedicated to capturing and sharing the most memorable moments of your running journey.",
+    "content3": "Our team of professional photographers ensures that every stride, every smile, and every finish line crossing is immortalized."
+  },
+  "contact": {
+    "title": "Contact Us",
+    "name": "Name",
+    "email": "Email",
+    "message": "Message",
+    "send": "Send"
+  },
+  "footer": {
+    "poweredBy": "Powered by XmaxMedia"
+  }
+}
+

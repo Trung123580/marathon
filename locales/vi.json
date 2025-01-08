@@ -1,0 +1,71 @@
+{
+  "language": {
+    "vietnamese": "Tiếng Việt",
+    "english": "English"
+  },
+  "events": {
+    "upcomingEvents": "Sự Kiện Sắp Tới",
+    "viewPhotos": "Xem Ảnh",
+    "loadMore": "Tải Thêm"
+  },
+  "event": {
+    "date": "Ngày",
+    "description": "Mô tả",
+    "registerNow": "Đăng Ký Ngay",
+    "photos": "Hình Ảnh Sự Kiện",
+    "notFound": "Không tìm thấy sự kiện"
+  },
+  "login": {
+    "title": "Đăng nhập",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "submit": "Gửi",
+    "error": "Email hoặc mật khẩu không hợp lệ",
+    "noAccount": "Chưa có tài khoản?",
+    "register": "Đăng ký tại đây"
+  },
+  "register": {
+    "title": "Đăng ký",
+    "name": "Tên",
+    "email": "Email",
+    "password": "Mật khẩu",
+    "confirmPassword": "Xác nhận mật khẩu",
+    "submit": "Gửi",
+    "haveAccount": "Đã có tài khoản?",
+    "login": "Đăng nhập tại đây"
+  },
+  "common": {
+    "home": "Trang chủ",
+    "events": "Sự kiện",
+    "news": "Tin tức",
+    "about": "Giới thiệu",
+    "contact": "Liên hệ",
+    "login": "Đăng nhập",
+    "register": "Đăng ký",
+    "logout": "Đăng xuất"
+  },
+  "search": {
+    "selectEvents": "Chọn hoặc tìm kiếm sự kiện",
+    "event1": "Marathon 2023",
+    "event2": "Bán Marathon 2023",
+    "event3": "Chạy 10K 2023",
+    "button": "Tìm kiếm"
+  },
+  "about": {
+    "title": "Về Chúng Tôi",
+    "content1": "Chào mừng bạn đến với nền tảng Ảnh Sự Kiện Marathon của chúng tôi.",
+    "content2": "Chúng tôi tận tâm ghi lại và chia sẻ những khoảnh khắc đáng nhớ nhất trong hành trình chạy bộ của bạn.",
+    "content3": "Đội ngũ nhiếp ảnh gia chuyên nghiệp của chúng tôi đảm bảo rằng mỗi bước chạy, mỗi nụ cười, và mỗi khoảnh khắc vượt qua vạch đích đều được lưu giữ mãi mãi."
+  },
+  "contact": {
+    "title": "Liên Hệ Với Chúng Tôi",
+    "name": "Tên",
+    "email": "Email",
+    "message": "Tin nhắn",
+    "send": "Gửi"
+  },
+  "footer": {
+    "poweredBy": "Được cung cấp bởi XmaxMedia"
+  }
+}
+
