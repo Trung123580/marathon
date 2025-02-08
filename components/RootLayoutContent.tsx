@@ -6,7 +6,6 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PhotoSlider from '@/components/PhotoSlider'
 import { usePathname } from 'next/navigation'
-import NextAuthProvider from '@/contexts/NextAuthProvider'
 
 export function RootLayoutContent({
   children,
@@ -14,7 +13,7 @@ export function RootLayoutContent({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const showPhotoSlider = !['/login', '/register'].includes(pathname)
+  const showPhotoSlider = !['/login', '/register', '/forgot-password', '/change-password'].includes(pathname)
 
   return (
     <ThemeProvider
@@ -23,7 +22,6 @@ export function RootLayoutContent({
       enableSystem={false}
       disableTransitionOnChange
     >
-      <NextAuthProvider>
         <AuthProvider>
           <Header />
           {showPhotoSlider && <PhotoSlider />}
@@ -32,7 +30,6 @@ export function RootLayoutContent({
           </main>
           <Footer />
         </AuthProvider>
-      </NextAuthProvider>
     </ThemeProvider>
   )
 }

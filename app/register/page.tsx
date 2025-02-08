@@ -8,6 +8,8 @@ import { Input } from '@/components/ui/input'
 import { Label } from '@/components/ui/label'
 import useTranslations from '@/hooks/useTranslations'
 import { registerUser } from '@/services'
+import Loading from '@/components/Loading'
+import { toast } from '@/components/ui/use-toast'
 
 export default function Register() {
   const { t, locale }: {t:any, locale:any} = useTranslations()
@@ -19,11 +21,12 @@ export default function Register() {
   })
   const {confirmPassword,email,password} = stateDataForm
   const [error, setError] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
   const router = useRouter()
-
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    setIsLoading(true)
     if (password.length < 4 || confirmPassword.length < 4){
       setError(locale === 'en' ? 'The password must be longer than 4 characters' : 'Mật khẩu phải dài hơn 4 ký tự')
       return
@@ -41,6 +44,7 @@ export default function Register() {
       setError(locale === 'en' ? data?.en ?? 'There is an error that occurs' : data?.vi ?? 'có lỗi sảy ra')
     }
     (e.target as HTMLFormElement).reset()
+    setIsLoading(false)
     setStateDataFrom({email: '', password: '', confirmPassword: ''})
     // For now, let's just redirect to the login page
   }
@@ -48,8 +52,8 @@ export default function Register() {
     const name = e.target.name
     const value = e.target.value.toLowerCase().trim()
     setStateDataFrom(prev => ({...prev, [name]: value}))
-    // if ()
   }
+  if (isLoading) return <Loading />
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-md mx-auto">

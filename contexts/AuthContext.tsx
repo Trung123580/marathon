@@ -1,6 +1,8 @@
 'use client'
 
-import React, { createContext, useContext, useState, useEffect } from 'react'
+import { loginUser } from '@/services'
+import { handleDeleteCookie, handleGetCookie, handleSetCookie } from '@/utils/helpers'
+import React, { createContext, useContext, useState, useEffect, useLayoutEffect } from 'react'
 
 type User = {
   id: number
@@ -9,50 +11,44 @@ type User = {
 }
 
 type AuthContextType = {
-  user: User | null
   login: (email: string, password: string) => Promise<boolean>
   logout: () => void
+  isAuth: boolean
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined)
 
-// Fake user data
-const fakeUsers: User[] = [
-  { id: 1, name: 'John Doe', email: 'john@example.com' },
-  { id: 2, name: 'Jane Smith', email: 'jane@example.com' },
-]
-
 export const AuthProvider: React.FC<{ children: React.ReactNode }> = ({ children }) => {
-  const [user, setUser] = useState<User | null>(null)
-
-  useEffect(() => {
-    // Check for existing session in localStorage
-    const storedUser = localStorage.getItem('user')
-    if (storedUser) {
-      setUser(JSON.parse(storedUser))
+  const [isAuth, setIsAuth] = useState(false)
+  const tokenApp = handleGetCookie({key: 'token-app'})
+  useLayoutEffect(() => {
+    if (tokenApp) {
+      setIsAuth(true)
     }
-  }, [])
+  }, [tokenApp])
+  // useEffect(() => {
+  //   // Check for existing session in localStorage
+  //   const storedUser = localStorage.getItem('user')
+  //   if (storedUser) {
+  //     setUser(JSON.parse(storedUser))
+  //   }
+  // }, [])
 
   const login = async (email: string, password: string): Promise<boolean> => {
-    // Simulate API call delay
-    await new Promise(resolve => setTimeout(resolve, 1000))
-
-    const foundUser = fakeUsers.find(u => u.email === email)
-    if (foundUser) {
-      setUser(foundUser)
-      localStorage.setItem('user', JSON.stringify(foundUser))
-      return true
+    const {data, status} = await loginUser({email, password})
+    if (status) {
+      handleSetCookie({key: 'token-app', value: data?.token ?? ''})
     }
-    return false
+    return status
   }
 
   const logout = () => {
-    setUser(null)
-    localStorage.removeItem('user')
+    setIsAuth(false)
+    handleDeleteCookie({key: 'token-app'})
   }
 
   return (
-    <AuthContext.Provider value={{ user, login, logout }}>
+    <AuthContext.Provider value={{ login, logout, isAuth }}>
       {children}
     </AuthContext.Provider>
   )

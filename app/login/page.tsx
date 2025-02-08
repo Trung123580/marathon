@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useActionState, useState } from 'react'
 import { useRouter } from 'next/navigation'
 import Link from 'next/link'
 import { Button } from '@/components/ui/button'
@@ -10,24 +10,38 @@ import { useAuth } from '@/contexts/AuthContext'
 import useTranslations from '@/hooks/useTranslations'
 
 export default function Login() {
-  const { t }: { t: any } =  useTranslations()
-  const [email, setEmail] = useState('')
-  const [password, setPassword] = useState('')
+  const { t, locale }: {t:any, locale:any} = useTranslations()
   const [error, setError] = useState('')
+  const [stateDataForm, setStateDataFrom] = useState({
+    email: '',
+    password: '',
+    confirmPassword: ''
+  })
+  const {email,password} = stateDataForm
+
   const { login } = useAuth()
   const router = useRouter()
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
     setError('')
+    if (password.length < 4){
+      setError(locale === 'en' ? 'The password must be longer than 4 characters' : 'Mật khẩu phải dài hơn 4 ký tự')
+      return
+    }
     const success = await login(email, password)
+    console.log(success)
     if (success) {
-      router.push('/')
+      router.replace('/')
     } else {
       setError(t?.login?.error || 'Invalid email or password')
     }
   }
-
+  const handleChangeInputValue = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const name = e.target.name
+    const value = e.target.value.toLowerCase().trim()
+    setStateDataFrom(prev => ({...prev, [name]: value}))
+  }
   return (
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-md mx-auto">
@@ -38,8 +52,9 @@ export default function Login() {
             <Input 
               id="email" 
               type="email" 
+              name='email'
               value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              onChange={handleChangeInputValue}
               placeholder={t?.login?.email || 'Email'} 
               required
             />
@@ -48,9 +63,10 @@ export default function Login() {
             <Label htmlFor="password">{t?.login?.password || 'Password'}</Label>
             <Input 
               id="password" 
+              name='password' 
               type="password" 
               value={password}
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={handleChangeInputValue}
               placeholder={t?.login?.password || 'Password'} 
               required
             />
@@ -64,6 +80,18 @@ export default function Login() {
             {t?.login?.register || 'Register here'}
           </Link>
         </p>
+        <p className="mt-4 text-center text-sm">
+          {/* {locale === 'en' ? 'Carry out the password? ' : 'Thực hiện mật khẩu? '} */}
+          <Link href="/forgot-password" className="text-primary hover:underline">
+            {locale === 'en'? 'Forgot password' : 'Quên mật khẩu'}
+          </Link>
+        </p>
+        {/* <p className="mt-4 text-center text-sm">
+          {locale === 'en' ? 'Password change? ' : 'Thay đổi mật khẩu? '}
+          <Link href="/change-password" className="text-primary hover:underline">
+            {locale === 'en'? 'Password change' : 'Thay đổi mật khẩu'}
+          </Link>
+        </p> */}
       </div>
     </div>
   )

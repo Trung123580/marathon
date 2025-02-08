@@ -42,7 +42,9 @@
     "contact": "Contact",
     "login": "Login",
     "register": "Register",
-    "logout": "Logout"
+    "logout": "Logout",
+    "changepassword": "ChangePassword",
+    "forgotpassword": "ForgotPassword"
   },
   "search": {
     "selectEvents": "Select or search events",

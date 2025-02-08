@@ -42,7 +42,9 @@
     "contact": "Liên hệ",
     "login": "Đăng nhập",
     "register": "Đăng ký",
-    "logout": "Đăng xuất"
+    "logout": "Đăng xuất",
+    "changepassword": "Đổi mật khẩu",
+    "forgotpassword": "Quên mật khẩu"
   },
   "search": {
     "selectEvents": "Chọn hoặc tìm kiếm sự kiện",

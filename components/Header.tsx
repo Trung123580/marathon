@@ -12,7 +12,7 @@ import { useAuth } from '@/contexts/AuthContext'
 export default function Header() {
   const { t }: { t: any } =  useTranslations()
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false)
-  const { user, logout } = useAuth()
+  const { logout, isAuth } = useAuth()
   const router = useRouter()
 
   const toggleMobileMenu = () => {
@@ -28,6 +28,7 @@ export default function Header() {
     { href: `/`, label: t?.common?.home || 'Trang chủ', icon: Home },
     { href: `/about`, label: t?.common?.about || 'Giới thiệu' },
     { href: `/contact`, label: t?.common?.contact || 'Liên hệ' },
+    // { href: `/change-password`, label: t?.common?.contact || 'Liên hệ' },
   ]
 
   return (
@@ -49,12 +50,17 @@ export default function Header() {
           ))}
         </nav>
         <div className="hidden md:flex ml-4 items-center space-x-4">
-          {user ? (
+          {isAuth ? (
             <>
-              <span className="text-sm font-medium text-white">{user.name}</span>
               <button onClick={handleLogout} className="text-sm font-medium text-white hover:text-white/80">
-                {t?.common?.logout || 'Logout'}
+                {/* {t?.common?.logout || 'Logout'} */}
+                logo app 
               </button>
+              <ul>
+                  <li>{t?.common?.logout || 'Logout'}</li>
+                  <li>{t?.common?.changepassword || 'changepassword'}</li>
+                  <li>{t?.common?.forgotpassword || 'forgotpassword'}</li>
+                </ul>
             </>
           ) : (
             <>
@@ -95,12 +101,16 @@ export default function Header() {
                 <span>{item.label}</span>
               </Link>
             ))}
-            {user ? (
+            {isAuth ? (
               <>
-                <span className="text-sm font-medium text-white">{user.name}</span>
                 <button onClick={handleLogout} className="text-sm font-medium text-white hover:text-white/80">
                   {t?.common?.logout || 'Logout'}
                 </button>
+                <ul>
+                  <li>logout</li>
+                  <li>changePassword</li>
+                  <li>forgotPassword</li>
+                </ul>
               </>
             ) : (
               <>
