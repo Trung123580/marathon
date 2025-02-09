@@ -5,7 +5,7 @@ const axiosInstance = axios.create({
   headers: {
     'Cache-Control': 'no-cache',
     'Pragma': 'no-cache',
-    'Expires': '0',
+    'Expires': new Date().getTime(),
   },
   timeout: 100000,
 } as CreateAxiosDefaults)

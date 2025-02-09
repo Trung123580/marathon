@@ -9,7 +9,6 @@ import { Label } from '@/components/ui/label'
 import useTranslations from '@/hooks/useTranslations'
 import { registerUser } from '@/services'
 import Loading from '@/components/Loading'
-import { toast } from '@/components/ui/use-toast'
 
 export default function Register() {
   const { t, locale }: {t:any, locale:any} = useTranslations()

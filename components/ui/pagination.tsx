@@ -20,7 +20,7 @@ const PaginationContent = React.forwardRef<
 >(({ className, ...props }, ref) => (
   <ul
     ref={ref}
-    className={cn("flex flex-row items-center gap-1", className)}
+    className={cn("flex flex-row items-center gap-1 cursor-pointer p-2", className)}
     {...props}
   />
 ))
@@ -69,8 +69,8 @@ const PaginationPrevious = ({
     className={cn("gap-1 pl-2.5", className)}
     {...props}
   >
-    <ChevronLeft className="h-4 w-4" />
-    <span>Previous</span>
+    <ChevronLeft className="h-5 w-5" />
+    {/* <span>Previous</span> */}
   </PaginationLink>
 )
 PaginationPrevious.displayName = "PaginationPrevious"
@@ -85,8 +85,8 @@ const PaginationNext = ({
     className={cn("gap-1 pr-2.5", className)}
     {...props}
   >
-    <span>Next</span>
-    <ChevronRight className="h-4 w-4" />
+    {/* <span>Next</span> */}
+    <ChevronRight className="h-5 w-5" />
   </PaginationLink>
 )
 PaginationNext.displayName = "PaginationNext"
@@ -101,7 +101,7 @@ const PaginationEllipsis = ({
     {...props}
   >
     <MoreHorizontal className="h-4 w-4" />
-    <span className="sr-only">More pages</span>
+    {/* <span className="sr-only">More pages</span> */}
   </span>
 )
 PaginationEllipsis.displayName = "PaginationEllipsis"

@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import React, { useState } from 'react'
 import Link from 'next/link'
 import { useRouter } from 'next/navigation'
 import { Button } from '@/components/ui/button'
@@ -8,6 +8,7 @@ import { Menu, X, Home } from 'lucide-react'
 import LanguageSwitcher from './LanguageSwitcher'
 import useTranslations from '@/hooks/useTranslations'
 import { useAuth } from '@/contexts/AuthContext'
+import { uuidv4 } from '@/utils/helpers'
 
 export default function Header() {
   const { t }: { t: any } =  useTranslations()
@@ -28,40 +29,42 @@ export default function Header() {
     { href: `/`, label: t?.common?.home || 'Trang chủ', icon: Home },
     { href: `/about`, label: t?.common?.about || 'Giới thiệu' },
     { href: `/contact`, label: t?.common?.contact || 'Liên hệ' },
-    // { href: `/change-password`, label: t?.common?.contact || 'Liên hệ' },
+    { href: `/change-password`, label: t?.common?.changepassword || 'changepassword' },
+    { href: `/forgot-password`, label: t?.common?.forgotpassword || 'forgotpassword'},
   ]
 
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[#fd652c] to-[#eb172b] text-white">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center">
         <div className="flex items-center space-x-2">
-          <span className="font-bold text-xl text-white">Ảnh Sự Kiện Marathon</span>
+          <Link href={'/'}><h1 className="font-bold text-xl text-white">Ảnh Sự Kiện Marathon</h1></Link>
         </div>
         <nav className="hidden md:flex ml-auto items-center space-x-4 lg:space-x-6">
-          {navItems.map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className="text-sm font-medium hover:text-white/80 flex items-center space-x-2"
-            >
-              {item.icon && <item.icon className="w-4 h-4" />}
-              <span>{item.label}</span>
-            </Link>
-          ))}
+          {navItems.map((item) => {
+            if ((item.href === '/change-password' || item.href === '/forgot-password')) return <React.Fragment key={uuidv4()}></React.Fragment>
+            return (
+              <Link
+                key={uuidv4()}
+                href={item.href}
+                className="text-sm font-medium hover:text-white/80 flex items-center space-x-2"
+              >
+                {item.icon && <item.icon className="w-4 h-4" />}
+                <span>{item.label}</span>
+              </Link>
+            )
+          })}
         </nav>
-        <div className="hidden md:flex ml-4 items-center space-x-4">
+        <div className="hidden md:flex ml-4 items-center space-x-4 justify-center">
           {isAuth ? (
-            <>
-              <button onClick={handleLogout} className="text-sm font-medium text-white hover:text-white/80">
-                {/* {t?.common?.logout || 'Logout'} */}
-                logo app 
+            <div className='relative group w-7 h-6 min-w-7'>
+              <button className="w-full h-full bg-violet-700 rounded-sm">
               </button>
-              <ul>
-                  <li>{t?.common?.logout || 'Logout'}</li>
-                  <li>{t?.common?.changepassword || 'changepassword'}</li>
-                  <li>{t?.common?.forgotpassword || 'forgotpassword'}</li>
+              <ul className='group-hover:block hidden absolute top-full left-1/2 -translate-x-1/2 rounded-md bg-slate-800 *:text-nowrap px-4 py-2 text-sm '>
+                  <li className='hover:text-white/80'><button onClick={handleLogout}>{t?.common?.logout || 'Logout'}</button></li>
+                  <li className='hover:text-white/80'><Link href='/change-password'>{t?.common?.changepassword || 'changepassword'}</Link></li>
+                  <li className='hover:text-white/80'><Link href='/forgot-password'>{t?.common?.forgotpassword || 'forgotpassword'}</Link></li>
                 </ul>
-            </>
+            </div>
           ) : (
             <>
               <Link href={`/login`} className="text-sm font-medium text-white hover:text-white/80">
@@ -106,11 +109,6 @@ export default function Header() {
                 <button onClick={handleLogout} className="text-sm font-medium text-white hover:text-white/80">
                   {t?.common?.logout || 'Logout'}
                 </button>
-                <ul>
-                  <li>logout</li>
-                  <li>changePassword</li>
-                  <li>forgotPassword</li>
-                </ul>
               </>
             ) : (
               <>
