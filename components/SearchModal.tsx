@@ -8,10 +8,12 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import useTranslations from '@/hooks/useTranslations'
 
+
 interface SearchModalProps {
   isOpen: boolean
   onClose: () => void
-  onSearch: (searchTerm: string, file: File | null, selectedFace: number | null) => void
+  onSearch: (searchTerm: string, selectedFace: number | null) => void
+  onUpload: (file: File | null) => void
 }
 
 const mockFaces = [
@@ -22,20 +24,20 @@ const mockFaces = [
   { id: 5, src: '/placeholder.svg?height=100&width=100', alt: 'Face 5' },
 ]
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, onUpload }) => {
   const { t }: { t: any } =  useTranslations()
   const [modalSearchInput, setModalSearchInput] = useState('')
-  const [selectedFile, setSelectedFile] = useState<File | null>(null)
+  // const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFace, setSelectedFace] = useState<number | null>(null)
 
   const handleModalSearch = () => {
-    onSearch(modalSearchInput, selectedFile, selectedFace)
+    onSearch(modalSearchInput, selectedFace)
     onClose()
   }
-
-  const handleFileChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      setSelectedFile(event.target.files[0])
+      // setSelectedFile(event.target.files[0])
+      onUpload(event.target.files[0])
     }
   }
 
@@ -59,17 +61,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch }) 
               onChange={(e) => setModalSearchInput(e.target.value)}
               className="col-span-4"
               placeholder={t?.search?.searchPlaceholder || "Enter search term"}
-            />
-          </div>
-          <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="file" className="col-span-4">
-              {t?.search?.uploadFile || "Upload File"}
-            </Label>
-            <Input
-              id="file"
-              type="file"
-              onChange={handleFileChange}
-              className="col-span-4"
             />
           </div>
           <div className="grid gap-4">
@@ -101,6 +92,18 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch }) 
               ))}
             </div>
           </div>
+          <div className="grid grid-cols-4 items-center gap-4">
+            <Label htmlFor="file" className="col-span-4">
+              {t?.search?.uploadFile || "Upload File"}
+            </Label>
+            <Input
+              id="file"
+              type="file"
+              onChange={handleFileChange}
+              className="col-span-4"
+            />
+          </div>
+        
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleModalSearch}>

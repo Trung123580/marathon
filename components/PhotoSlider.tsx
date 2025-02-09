@@ -1,6 +1,6 @@
 'use client'
 
-import React, { useState } from 'react'
+import React, { useCallback, useRef, useState } from 'react'
 import Image from 'next/image'
 import Slider from 'react-slick'
 import { ChevronLeft, ChevronRight, Search, Check } from 'lucide-react'
@@ -10,6 +10,9 @@ import useTranslations from '@/hooks/useTranslations'
 import SearchModal from './SearchModal'
 import 'slick-carousel/slick/slick.css'
 import 'slick-carousel/slick/slick-theme.css'
+import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken, uuidv4 } from '@/utils/helpers'
+import { useRouter } from 'next/navigation'
+import { getPhotos, uploadFile } from '@/services'
 
 const photos = [
   { src: '/images/marathon1.jpg', alt: 'Runners at the starting line of a marathon' },
@@ -35,6 +38,8 @@ const PhotoSlider: React.FC = () => {
   const [selected, setSelected] = useState<(typeof mockEvents)[0] | null>(null)
   const [query, setQuery] = useState('')
   const [isModalOpen, setIsModalOpen] = useState(false)
+  const router = useRouter()
+  const refFileUpload = useRef<File | null>(null)
 
   const filteredEvents =
     query === ''
@@ -57,7 +62,8 @@ const PhotoSlider: React.FC = () => {
   }
 
   const handleSearch = () => {
-    setIsModalOpen(true)
+    if (selected) setIsModalOpen(true)
+    // check token redirect login
     if (selected) {
       console.log('Selected event:', selected)
     } else {
@@ -65,13 +71,26 @@ const PhotoSlider: React.FC = () => {
     }
   }
 
-  const handleModalSearch = (searchTerm: string, file: File | null, selectedFace: number | null) => {
-    console.log('Modal search:', searchTerm)
-    console.log('Selected file:', file)
-    console.log('Selected face:', selectedFace)
-    // Here you would typically perform the search based on the input, file, and selected face
+  const handleModalSearch = useCallback(async (searchTerm: string, selectedFace: number | null) => {
+    console.log('Searching:', { searchTerm, selectedFace })
+    // Implement the search logic here
+    // check token redirect login
+    const {} = await getPhotos({eventCode:'', face: selectedFace?.toString(), query:'', page: 1})
+  }, [selected])
+  const handleUpload = async (file: File | null) => {
+    if (file) {
+      const token = handleGetCookie({key: 'token-app'})
+      console.log(token);
+      if (!token) {
+        window.location.href = '/login'
+      }
+      const nameFile = file?.name.split('.')[1] as string
+      const base64String = await getBase64StringFromDataURL(file as File)
+      const user = jwtDecodeToken({token: token as string}) as any
+      const response = await uploadFile({base64: base64String, userId: user?.unique_name , name: `${uuidv4()}.${nameFile}`, token: token as string})
+      console.log(response)
+    }
   }
-
   return (
     <div className="w-full bg-gray-100 flex justify-center">
       <div className="relative w-full max-w-[1400px]">
@@ -124,6 +143,7 @@ const PhotoSlider: React.FC = () => {
                         displayValue={(event: (typeof mockEvents)[0] | null) => event?.name ?? ''}
                         onChange={(event) => setQuery(event.target.value)}
                         placeholder={t?.search?.selectEvents || "Select or search events"}
+                        autoFocus
                       />
                       <Combobox.Button className="absolute inset-y-0 right-0 flex items-center pr-2">
                         <ChevronLeft
@@ -177,11 +197,11 @@ const PhotoSlider: React.FC = () => {
               </div>
               <Button 
                 type="submit" 
-                className="w-full sm:w-auto"
+                className="w-full sm:w-auto flex items-center justify-center"
                 onClick={handleSearch}
               >
                 <Search className="w-4 h-4 mr-2" />
-                {selected ? (t.search?.view || "View") : (t.search?.search || "Search")}
+                 <span className='text-nowrap mt-1'>{selected ? (t.search?.view || "View") : (t.search?.search || "Select Search")}</span>
               </Button>
             </div>
           </div>
@@ -191,6 +211,7 @@ const PhotoSlider: React.FC = () => {
         isOpen={isModalOpen}
         onClose={() => setIsModalOpen(false)}
         onSearch={handleModalSearch}
+        onUpload={handleUpload}
       />
     </div>
   )

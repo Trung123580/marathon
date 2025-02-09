@@ -1,5 +1,7 @@
 
+import axios from 'axios'
 import axiosInstance from './base'
+import { uuidv4 } from '@/utils/helpers'
 export const registerUser = async ({email, password}: {email:string, password:string}) => {
     try {
         const response = await axiosInstance.post(`/Auth/Register`, {
@@ -107,36 +109,16 @@ export const getEventDetail = async ({code, source}: {source:string, code:string
         }
     }
 }
-// export const callApiImage = async ({ page, eventCode }: { page: number; eventCode: string }) => {
-//   try {
-//     const response = await axios.get(`${BASE_API}/web/GetPhotosByEventCode`, {
-//       params: {
-//         // eventCode: EVENT_CODE,
-//         eventCode: eventCode,
-//         partnerCode: PARTNER_CODE,
-//         currentPage: page,
-//         pageSize: 60,
-//         sort: true,
-//       },
-//     })
-//     if (response.status === 200) {
-//       return response.data
-//     } else {
-//       throw new Error("Data not found")
-//     }
-//   } catch (error) {
-//     return []
-//   }
-// }
-export const getPhotosByEventCode = async ({ page, eventCode, query }: {query?:string, page?: number; eventCode: string }) => {
+export const getPhotos = async ({ page, eventCode, query, face }: {face?:string, query?:string, page?: number; eventCode: string }) => {
     try {
-        const response = await axiosInstance.get('/Main/GetPhotosByEventCode', {
+        const response = await axiosInstance.get('/Main/GetPhotos', {
             params: {
                 eventCode: eventCode,
                 currentPage: page,
                 query: query,
                 pageSize: 24,
-                sort: true
+                sort: true,
+                face: face
             },
             validateStatus: (status) => status === 200 || status === 204
         })
@@ -150,6 +132,33 @@ export const getPhotosByEventCode = async ({ page, eventCode, query }: {query?:s
             status: false,
             data: null,
             message: error?.message ?? 'Error while getting photos'
+        }
+    }
+}
+
+export const uploadFile = async ({base64, token, name, userId}: {userId: string, name:string, token:string, base64:string}) => {
+    try {
+        const response = await axios.post('https://z7fqm2zcr6.execute-api.us-west-2.amazonaws.com/prod/uploadsearch',
+        {
+            image: base64,
+            filename: name,
+            userid: userId
+        }, 
+        {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            }
+        })
+        return {
+            status: true,
+            data: response.data,
+            message: 'uploading file success'
+        }
+    } catch (error) {
+        return {
+            status: false,
+            data: null,
+            message: 'uploading file error'
         }
     }
 }

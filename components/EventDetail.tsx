@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import Image from 'next/image'
 import { Search } from 'lucide-react'
 import { Button } from '@/components/ui/button'
@@ -10,30 +10,8 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { usePathname, useRouter } from 'next/navigation'
 import { useIsMobile } from './ui/use-mobile'
 import Loading from './Loading'
-
-// const events = [
-//   {
-//     id: 1,
-//     title: 'City Marathon 2023',
-//     image: '/images/city-marathon.jpg',
-//     date: '2023-09-15',
-//     description: 'Experience the thrill of running through the heart of the city.',
-//   },
-//   {
-//     id: 2,
-//     title: 'Mountain Trail Run',
-//     image: '/images/mountain-trail.jpg',
-//     date: '2023-10-22',
-//     description: 'Challenge yourself with a scenic run through mountain trails.',
-//   },
-//   {
-//     id: 3,
-//     title: 'Coastal Half Marathon',
-//     image: '/images/coastal-half-marathon.jpg',
-//     date: '2023-11-05',
-//     description: 'Enjoy breathtaking ocean views as you run along the coast.',
-//   },
-// ]
+import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken } from '@/utils/helpers'
+import { uploadFile } from '@/services'
 type photoItem = {
   finalKey:string
   id:string
@@ -48,6 +26,8 @@ type PhotoList = {
 }
 export default function EventDetail({dataDetail, dataPhotoList, page}:{page: number,dataPhotoList:PhotoList, dataDetail:any}) {
   const { t }: {t:any} = useTranslations()
+  const refFileUpload = useRef<File | null>(null)
+  
   console.log(dataDetail)
   console.log(dataPhotoList)
   const router = useRouter()
@@ -60,9 +40,27 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isLoading, setIsLoading] = useState(false)
   const [searchPage, setSearchPage] = useState("")
-  const handleSearch = (searchTerm: string, file: File | null, selectedFace: number | null) => {
-    console.log('Searching:', { searchTerm, file, selectedFace })
+
+  const handleModalSearch = async (searchTerm: string, selectedFace: number | null) => {
+    console.log('Searching:', { searchTerm, selectedFace })
     // Implement the search logic here
+    // check token redirect login
+
+  }
+  const handleUpload = async (file: File | null) => {
+    if (file) {
+      const token = handleGetCookie({key: 'token-app'})
+      if (!token) {
+        window.location.href = '/login'
+      }
+      const nameFile = file?.name as string
+      const fileType = file?.type as string
+      const base64String = await getBase64StringFromDataURL(file as File)
+      const user = jwtDecodeToken({token: token as string}) as any
+      // const response = await uploadFile({base64: base64String, userId: user?.unique_name , name: nameFile, token: token as string})
+      console.log(fileType)
+      
+    }
   }
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -194,7 +192,8 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
-        onSearch={handleSearch}
+        onSearch={handleModalSearch}
+        onUpload={handleUpload}
       />
     </div>
   )
