@@ -7,7 +7,7 @@ const axiosInstance = axios.create({
     'Pragma': 'no-cache',
     'Expires': new Date().getTime(),
   },
-  timeout: 100000,
+  // timeout: 100000,
 } as CreateAxiosDefaults)
 
 export default axiosInstance

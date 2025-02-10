@@ -10,8 +10,8 @@ import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, Pagi
 import { usePathname, useRouter } from 'next/navigation'
 import { useIsMobile } from './ui/use-mobile'
 import Loading from './Loading'
-import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken } from '@/utils/helpers'
-import { uploadFile } from '@/services'
+import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken, uuidv4 } from '@/utils/helpers'
+import { getPhotos, getUserFaces, uploadFile } from '@/services'
 type photoItem = {
   finalKey:string
   id:string
@@ -26,41 +26,67 @@ type PhotoList = {
 }
 export default function EventDetail({dataDetail, dataPhotoList, page}:{page: number,dataPhotoList:PhotoList, dataDetail:any}) {
   const { t }: {t:any} = useTranslations()
-  const refFileUpload = useRef<File | null>(null)
-  
-  console.log(dataDetail)
-  console.log(dataPhotoList)
   const router = useRouter()
   const pathName = usePathname()
   const isMobile = useIsMobile()
-  
-  const dataPhotos = dataPhotoList.photoItems ?? []
-  const totalPages = dataPhotoList.totalPages ?? 1
-  console.log(dataPhotos, totalPages, page)
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const [statePhoto, setStatePhoto] = useState({
+    dataPhotos: dataPhotoList?.photoItems ?? [],
+    totalPages: dataPhotoList?.totalPages ?? 1,
+  })
+  const {dataPhotos,totalPages} = statePhoto
   const [isLoading, setIsLoading] = useState(false)
-  const [searchPage, setSearchPage] = useState("")
+  const [facesData, setFacesData] = useState([])
+  const token = handleGetCookie({key: 'token-app'}) as string
 
-  const handleModalSearch = async (searchTerm: string, selectedFace: number | null) => {
-    console.log('Searching:', { searchTerm, selectedFace })
-    // Implement the search logic here
-    // check token redirect login
-
-  }
+   const handleModalSearch = useCallback(async (searchTerm: string, selectedFace: number | null) => {
+    if (!dataDetail) return
+    const {data, message, status} = await getPhotos({eventCode:dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token})
+    const dataResponse = data as PhotoList
+    alert(status)
+    if (!status) {
+      alert('search failed')
+      return
+    }
+    setStatePhoto({
+      dataPhotos: dataResponse.photoItems,
+      totalPages: dataResponse.totalPages
+    })
+    if (page) router.push(`${pathName}`)
+  }, [dataDetail, token, page])
+  console.log(facesData)
+  
+  const handleGetUserFaces = useCallback(async () => {
+    if (!token) return
+    const {data} = await getUserFaces({token: token})
+    setFacesData(data?.data ?? [])
+  }, [token])
+  useEffect(() => {
+    if (token) {
+      handleGetUserFaces()
+    }
+  }, [token])
   const handleUpload = async (file: File | null) => {
     if (file) {
-      const token = handleGetCookie({key: 'token-app'})
       if (!token) {
         window.location.href = '/login'
       }
-      const nameFile = file?.name as string
-      const fileType = file?.type as string
+      const nameFile = file?.name.split('.')[1] as string
       const base64String = await getBase64StringFromDataURL(file as File)
       const user = jwtDecodeToken({token: token as string}) as any
-      // const response = await uploadFile({base64: base64String, userId: user?.unique_name , name: nameFile, token: token as string})
-      console.log(fileType)
-      
+      setIsLoading(true)
+      const { status} = await uploadFile({base64: base64String, userId: user?.unique_name , name: `${uuidv4()}.${nameFile}`, token: token as string})
+      if (!status) alert('Error upload file size')
+      await handleGetUserFaces()
+      setIsLoading(false)
     }
+  }
+  const handleOpenModalSearch = () => {
+    if (!token) {
+      router.push('/login')
+      return
+    }
+    setIsSearchModalOpen(true)
   }
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
@@ -79,12 +105,11 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
   if (endPage - startPage + 1 < maxVisiblePages) {
     startPage = Math.max(1, endPage - maxVisiblePages + 1);
   }
-  
-  if (isLoading) return <Loading />
-  
   if (!dataDetail) return <div className="container mx-auto px-4 py-8">{t?.event?.notFound || 'Event not found'}</div>
 
   return (
+    <>
+    {isLoading && <Loading />}
     <div className="container mx-auto px-4 py-8 max-w-[1400px]">
       <h1 className="text-3xl font-bold mb-6">{dataDetail?.name}</h1>
       <div className="space-y-4">
@@ -95,7 +120,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
         </div>
         <div className="flex space-x-4">
           <Button>{t?.event?.registerNow || 'Register Now'}</Button>
-          <Button onClick={() => setIsSearchModalOpen(true)}>
+          <Button onClick={handleOpenModalSearch}>
             <Search className="w-4 h-4 mr-2" />
             {t?.search?.searchPhotos || 'Search Photos'}
           </Button>
@@ -103,7 +128,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
       </div>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">{t?.event?.photos || 'Event Photos'}</h2>
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
           {dataPhotos.map(({id,publicThumbUrl, finalKey}) => (
             <div key={id} className="relative">
               <img className='object-contain w-full h-full'
@@ -172,30 +197,16 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
           </PaginationItem>
         </PaginationContent>
       </Pagination>
-      {/* <div className="flex items-center gap-2">
-        <input
-          type="number"
-          placeholder="Nhập trang..."
-          className="border p-2 w-24 text-center rounded-lg"
-          value={searchPage}
-          onChange={(e) => setSearchPage(e.target.value)}
-        />
-        <button
-          onClick={() => goToPage(Number(searchPage))}
-          className="bg-blue-500 text-white px-4 py-2 rounded-lg disabled:opacity-50"
-          disabled={!searchPage || Number(searchPage) < 1 || Number(searchPage) > totalPages}
-        >
-          Tìm kiếm
-        </button>
-      </div> */}
 
       <SearchModal
         isOpen={isSearchModalOpen}
         onClose={() => setIsSearchModalOpen(false)}
         onSearch={handleModalSearch}
         onUpload={handleUpload}
+        facesData={facesData}
       />
     </div>
+    </>
   )
 }
 

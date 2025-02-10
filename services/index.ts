@@ -109,9 +109,12 @@ export const getEventDetail = async ({code, source}: {source:string, code:string
         }
     }
 }
-export const getPhotos = async ({ page, eventCode, query, face }: {face?:string, query?:string, page?: number; eventCode: string }) => {
+export const getPhotos = async ({ page, eventCode, query, face, token }: {token?:string, face?:string, query?:string, page?: number; eventCode: string }) => {
     try {
         const response = await axiosInstance.get('/Main/GetPhotos', {
+            headers: {
+                'Authorization': `Bearer ${token}`
+            },
             params: {
                 eventCode: eventCode,
                 currentPage: page,
@@ -159,6 +162,24 @@ export const uploadFile = async ({base64, token, name, userId}: {userId: string,
             status: false,
             data: null,
             message: 'uploading file error'
+        }
+    }
+}
+
+export const getUserFaces = async ({token}: {token:string}) => {
+    try {
+        const response = await axiosInstance.get(`/Main/GetUserFaces`, {
+            headers :{
+            'Authorization': `Bearer ${token}`
+        }, validateStatus: (status) => status === 200 || status === 204 })
+        return {
+            status: true,
+            data: response.data
+        }
+    } catch (error: any) {
+        return {
+            status: false,
+            data: []
         }
     }
 }

@@ -1,7 +1,6 @@
 'use client'
-import React, { useState } from 'react'
-import Image from 'next/image'
-import { Check, Upload } from 'lucide-react'
+import React, { useRef, useState } from 'react'
+import { Check } from 'lucide-react'
 import { Button } from "@/components/ui/button"
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog"
 import { Input } from "@/components/ui/input"
@@ -14,29 +13,29 @@ interface SearchModalProps {
   onClose: () => void
   onSearch: (searchTerm: string, selectedFace: number | null) => void
   onUpload: (file: File | null) => void
+  facesData: any[]
 }
 
-const mockFaces = [
-  { id: 1, src: '/placeholder.svg?height=100&width=100', alt: 'Face 1' },
-  { id: 2, src: '/placeholder.svg?height=100&width=100', alt: 'Face 2' },
-  { id: 3, src: '/placeholder.svg?height=100&width=100', alt: 'Face 3' },
-  { id: 4, src: '/placeholder.svg?height=100&width=100', alt: 'Face 4' },
-  { id: 5, src: '/placeholder.svg?height=100&width=100', alt: 'Face 5' },
-]
-
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, onUpload }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, onUpload, facesData }) => {
   const { t }: { t: any } =  useTranslations()
   const [modalSearchInput, setModalSearchInput] = useState('')
-  // const [selectedFile, setSelectedFile] = useState<File | null>(null)
   const [selectedFace, setSelectedFace] = useState<number | null>(null)
-
+  const refInput = useRef<HTMLInputElement | null>(null)
+  
   const handleModalSearch = () => {
     onSearch(modalSearchInput, selectedFace)
     onClose()
+    setModalSearchInput('')
+    setSelectedFace(null)
+    if (refInput.current) refInput.current.value = ''
   }
+
   const handleFileChange = async (event: React.ChangeEvent<HTMLInputElement>) => {
     if (event.target.files && event.target.files[0]) {
-      // setSelectedFile(event.target.files[0])
+      if (event.target.files[0].size >= 10 * 1024 * 1024) {
+        (event.target as HTMLInputElement).value = ''
+        return alert('File size is too large')
+      }
       onUpload(event.target.files[0])
     }
   }
@@ -63,34 +62,31 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
               placeholder={t?.search?.searchPlaceholder || "Enter search term"}
             />
           </div>
-          <div className="grid gap-4">
-            <Label className="col-span-4">
+          <div className="">
+            <Label className="">
               {t?.search?.selectFace || "Select a face to search"}
             </Label>
-            <div className="grid grid-cols-5 gap-4">
-              {mockFaces.map((face) => (
+           {facesData.length > 0 &&  <div className="flex gap-[13px] overflow-auto flex-wrap  overflow-y-auto max-h-[100px]">
+            {/* max-w-[363px] md:max-w-[550px] */}
+              {facesData.map((face) => (
                 <div
-                  key={face.id}
-                  className={`relative cursor-pointer ${
-                    selectedFace === face.id ? 'ring-2 ring-primary' : ''
-                  }`}
-                  onClick={() => setSelectedFace(face.id)}
+                  key={face.faceId}
+                  className={`relative cursor-pointer`}
+                  onClick={() => setSelectedFace(face.faceId)}
                 >
-                  <Image
-                    src={face.src}
-                    alt={face.alt}
-                    width={100}
-                    height={100}
-                    className="rounded-md"
+                  <img
+                    src={face.faceUrl}
+                    alt={face.userId}
+                    className="rounded-md min-w-16 w-16 h-16 object-cover border border-red-200"
                   />
-                  {selectedFace === face.id && (
-                    <div className="absolute inset-0 flex items-center justify-center bg-primary bg-opacity-50 rounded-md">
+                  {selectedFace === face.faceId && (
+                    <div className="absolute w-full h-full inset-0 flex items-center justify-center bg-black/40 bg-opacity-50 rounded-md">
                       <Check className="text-white" />
                     </div>
                   )}
                 </div>
               ))}
-            </div>
+            </div>}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
             <Label htmlFor="file" className="col-span-4">
@@ -99,11 +95,12 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
             <Input
               id="file"
               type="file"
+              ref={refInput}
               onChange={handleFileChange}
               className="col-span-4"
+              accept='image/jpeg'
             />
           </div>
-        
         </div>
         <DialogFooter>
           <Button type="submit" onClick={handleModalSearch}>
