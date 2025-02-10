@@ -183,3 +183,44 @@ export const getUserFaces = async ({token}: {token:string}) => {
         }
     }
 }
+export const getUserTransactions = async ({token, eventCode}: {eventCode:string, token:string}) => {
+    try {
+        const response = await axiosInstance.get(`/Main/GetUserTransactions`, {
+            params :{
+                eventCode: eventCode
+            },
+            headers :{
+            'Authorization': `Bearer ${token}`
+        }, validateStatus: (status) => status === 200 || status === 204 })
+        return {
+            status: true,
+            data: response.data
+        }
+    } catch (error: any) {
+        return {
+            status: false,
+            data: []
+        }
+    }
+}
+export const postInitTransactions = async ({token, eventCode, query, face}: {query:string, face:string, eventCode:string, token:string}) => {
+    try {
+        const response = await axiosInstance.post(`/Main/InitTransactions`,{
+            eventCode,
+            query,
+            face
+        }, {
+            headers :{
+            'Authorization': `Bearer ${token}`
+        }, validateStatus: (status) => status === 200 || status === 204 })
+        return {
+            status: true,
+            data: response.data
+        }
+    } catch (error: any) {
+        return {
+            status: false,
+            data: null
+        }
+    }
+}

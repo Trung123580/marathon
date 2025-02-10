@@ -11,7 +11,8 @@ import { usePathname, useRouter } from 'next/navigation'
 import { useIsMobile } from './ui/use-mobile'
 import Loading from './Loading'
 import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken, uuidv4 } from '@/utils/helpers'
-import { getPhotos, getUserFaces, uploadFile } from '@/services'
+import { getPhotos, getUserFaces, getUserTransactions, postInitTransactions, uploadFile } from '@/services'
+import ModalQR from './ModalQR'
 type photoItem = {
   finalKey:string
   id:string
@@ -24,12 +25,13 @@ type PhotoList = {
   totalItems:number
   totalPages:number
 }
-export default function EventDetail({dataDetail, dataPhotoList, page}:{page: number,dataPhotoList:PhotoList, dataDetail:any}) {
+export default function EventDetail({dataDetail, dataPhotoList, page, code}:{code:string,page: number,dataPhotoList:PhotoList, dataDetail:any}) {
   const { t }: {t:any} = useTranslations()
   const router = useRouter()
   const pathName = usePathname()
   const isMobile = useIsMobile()
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
+  const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [statePhoto, setStatePhoto] = useState({
     dataPhotos: dataPhotoList?.photoItems ?? [],
     totalPages: dataPhotoList?.totalPages ?? 1,
@@ -54,7 +56,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
     })
     if (page) router.push(`${pathName}`)
   }, [dataDetail, token, page])
-  console.log(facesData)
+  console.log(dataDetail)
   
   const handleGetUserFaces = useCallback(async () => {
     if (!token) return
@@ -88,6 +90,18 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
     }
     setIsSearchModalOpen(true)
   }
+
+  const handleTransactions = async () => {
+    setIsQRModalOpen(true)
+    // const response = await getUserTransactions({token: token, eventCode: code})
+    // console.log(response)
+  }
+
+  const handleBuy = async () => {
+    // const response = await postInitTransactions({token, eventCode: code, face:'1', query:''})
+    // console.log(response)
+  }
+
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       router.push(`${pathName}?page=${page}`)
@@ -119,7 +133,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
           <p dangerouslySetInnerHTML={{__html: dataDetail?.description as string }}></p>
         </div>
         <div className="flex space-x-4">
-          <Button>{t?.event?.registerNow || 'Register Now'}</Button>
+          <Button onClick={handleTransactions}>{t?.event?.registerNow || 'InitTransaction'}</Button>
           <Button onClick={handleOpenModalSearch}>
             <Search className="w-4 h-4 mr-2" />
             {t?.search?.searchPhotos || 'Search Photos'}
@@ -204,7 +218,9 @@ export default function EventDetail({dataDetail, dataPhotoList, page}:{page: num
         onSearch={handleModalSearch}
         onUpload={handleUpload}
         facesData={facesData}
+        onBuy={handleBuy}
       />
+      <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)}/>
     </div>
     </>
   )

@@ -9,7 +9,7 @@ const page = async ({ params, searchParams }: {searchParams?: {[key: string]: st
   const {data} = await getEventDetail({code: code, source: process.env.NEXT_PUBLIC_SOURCE as string})
   const {data:PhotoData} = await getPhotos({eventCode:code, page: Number(page)})
   return (
-    <EventDetail key={uuidv4()} dataDetail={data} dataPhotoList={PhotoData} page={Number(page)}/>
+    <EventDetail key={uuidv4()} dataDetail={data} code={code} dataPhotoList={PhotoData} page={Number(page)}/>
   )
 }
 

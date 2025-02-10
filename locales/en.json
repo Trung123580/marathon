@@ -11,9 +11,10 @@
   "event": {
     "date": "Date",
     "description": "Description",
-    "registerNow": "Register Now",
+    "registerNow": "Init Transaction",
     "photos": "Event Photos",
-    "notFound": "Event not found"
+    "notFound": "Event not found",
+    "qrtitle": "QR Payment"
   },
   "login": {
     "title": "Login",
@@ -51,7 +52,8 @@
     "event1": "Marathon 2023",
     "event2": "Half Marathon 2023",
     "event3": "10K Run 2023",
-    "button": "Search"
+    "button": "Search",
+    "buy": "Buy"
   },
   "about": {
     "title": "About Us",
