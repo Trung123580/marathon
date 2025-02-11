@@ -9,3 +9,7 @@ type EventItem = {
     name:string
     nameEN:string
   }
+  type Payment = {
+    price: number,
+    transCode: string
+  }

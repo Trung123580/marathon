@@ -14,16 +14,21 @@ interface SearchModalProps {
   onSearch: (searchTerm: string, selectedFace: number | null) => void
   onUpload: (file: File | null) => void
   facesData: any[]
-  onBuy: () => void
+  onDelete: (faceId: string) => void
 }
 
-const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, onUpload, facesData, onBuy }) => {
+const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, onUpload, facesData, onDelete }) => {
   const { t }: { t: any } =  useTranslations()
   const [modalSearchInput, setModalSearchInput] = useState('')
   const [selectedFace, setSelectedFace] = useState<number | null>(null)
+  const [error, setError] = useState('')
   const refInput = useRef<HTMLInputElement | null>(null)
   
   const handleModalSearch = () => {
+    if (modalSearchInput.length > 0 && modalSearchInput.length < 4) {
+      setError(t?.search?.searchBib || 'Keywords longer than 4 characters')
+      return
+    }
     onSearch(modalSearchInput, selectedFace)
     onClose()
     setModalSearchInput('')
@@ -63,6 +68,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
               placeholder={t?.search?.searchPlaceholder || "Enter search term"}
             />
           </div>
+          {!!error && <span className='w-full text-red-500 text-sm'>{error}</span>}
           <div className="">
             <Label className="">
               {t?.search?.selectFace || "Select a face to search"}
@@ -80,7 +86,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
                     alt={face.userId}
                     className="rounded-md min-w-16 w-16 h-16 object-cover border border-red-200"
                   />
-                  <button className='absolute top-0 right-0 bg-black/30 p-0.5'>
+                  <button className='absolute top-0 right-0 bg-black/30 p-0.5 z-10' onClick={()=>onDelete(face.faceId)}>
                     <svg
                         xmlns="http://www.w3.org/2000/svg"
                         xmlnsXlink="http://www.w3.org/1999/xlink"
@@ -94,7 +100,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
                     </svg>
                   </button>
                   {selectedFace === face.faceId && (
-                    <div className="absolute w-full h-full inset-0 flex items-center justify-center bg-black/40 bg-opacity-50 rounded-md">
+                    <div className="absolute w-full h-full inset-0 flex items-center justify-center bg-black/40 bg-opacity-50 rounded-md border-[3px] border-red-500">
                       <Check className="text-white" />
                     </div>
                   )}
@@ -117,9 +123,6 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
           </div>
         </div>
         <DialogFooter>
-          <Button type="submit" onClick={onBuy}>
-            {t?.search?.buy || "Buy"}
-          </Button>
           <Button type="submit" onClick={handleModalSearch}>
             {t?.search?.searchButton || "Search"}
           </Button>

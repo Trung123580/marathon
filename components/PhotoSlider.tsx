@@ -171,12 +171,6 @@ const PhotoSlider: React.FC = () => {
           </div> }
         </div>
       </div>
-      {/* <SearchModal
-        isOpen={isModalOpen}
-        onClose={() => setIsModalOpen(false)}
-        onSearch={handleModalSearch}
-        onUpload={handleUpload}
-      /> */}
     </div>
   )
 }

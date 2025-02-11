@@ -183,12 +183,9 @@ export const getUserFaces = async ({token}: {token:string}) => {
         }
     }
 }
-export const getUserTransactions = async ({token, eventCode}: {eventCode:string, token:string}) => {
+export const getUserTransactions = async ({token}: { token:string}) => {
     try {
         const response = await axiosInstance.get(`/Main/GetUserTransactions`, {
-            params :{
-                eventCode: eventCode
-            },
             headers :{
             'Authorization': `Bearer ${token}`
         }, validateStatus: (status) => status === 200 || status === 204 })
@@ -203,12 +200,31 @@ export const getUserTransactions = async ({token, eventCode}: {eventCode:string,
         }
     }
 }
-export const postInitTransactions = async ({token, eventCode, query, face}: {query:string, face:string, eventCode:string, token:string}) => {
+export const postInitTransaction = async ({token, eventCode, query, face, items, type}: {items?: string[], type?: 'ITEM' | 'LINK', query:string, face?:string, eventCode?:string, token:string}) => {
     try {
-        const response = await axiosInstance.post(`/Main/InitTransactions`,{
+        const response = await axiosInstance.post(`/Main/InitTransaction`,{
             eventCode,
             query,
             face
+        }, {
+            headers :{
+            'Authorization': `Bearer ${token}`
+        }, validateStatus: (status) => status === 200 || status === 204 })
+        return {
+            status: true,
+            data: response.data
+        }
+    } catch (error: any) {
+        return {
+            status: false,
+            data: null
+        }
+    }
+}
+export const postRemoveFace = async ({token, faceId}: {faceId:string, token:string}) => {
+    try {
+        const response = await axiosInstance.post(`/Main/RemoveFace`,{
+            faceId
         }, {
             headers :{
             'Authorization': `Bearer ${token}`

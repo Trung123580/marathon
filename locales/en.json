@@ -14,7 +14,12 @@
     "registerNow": "Init Transaction",
     "photos": "Event Photos",
     "notFound": "Event not found",
-    "qrtitle": "QR Payment"
+    "qrtitle": "QR Payment",
+    "conform": "Confirm delete ?",
+    "deleteText": "You definitely want to delete photos ?",
+    "headerNotification": "Notification !",
+    "notification": "This is just a thumbnail image, if you want to download the photo, click to see the photo and download the high quality photos!",
+    "back":"Back"
   },
   "login": {
     "title": "Login",
@@ -45,7 +50,8 @@
     "register": "Register",
     "logout": "Logout",
     "changepassword": "ChangePassword",
-    "forgotpassword": "ForgotPassword"
+    "forgotpassword": "ForgotPassword",
+    "historyPayment": "HistoryPayment"
   },
   "search": {
     "selectEvents": "Select or search events",
@@ -53,7 +59,8 @@
     "event2": "Half Marathon 2023",
     "event3": "10K Run 2023",
     "button": "Search",
-    "buy": "Buy"
+    "buy": "Buy",
+    "searchBib": "Keywords longer than 4 characters"
   },
   "about": {
     "title": "About Us",

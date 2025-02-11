@@ -31,8 +31,8 @@ export default function Header() {
     { href: `/contact`, label: t?.common?.contact || 'Liên hệ' },
     { href: `/change-password`, label: t?.common?.changepassword || 'changepassword' },
     { href: `/forgot-password`, label: t?.common?.forgotpassword || 'forgotpassword'},
+    { href: `/payment-history`, label: t?.common?.historyPayment || 'historyPayment'},
   ]
-
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[#fd652c] to-[#eb172b] text-white">
       <div className="max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center">
@@ -41,7 +41,7 @@ export default function Header() {
         </div>
         <nav className="hidden md:flex ml-auto items-center space-x-4 lg:space-x-6">
           {navItems.map((item) => {
-            if ((item.href === '/change-password' || item.href === '/forgot-password')) return <React.Fragment key={uuidv4()}></React.Fragment>
+            if ((item.href === '/change-password' || item.href === '/forgot-password' || item.href === '/payment-history')) return <React.Fragment key={uuidv4()}></React.Fragment>
             return (
               <Link
                 key={uuidv4()}
@@ -63,6 +63,7 @@ export default function Header() {
                   <li className='hover:text-white/80'><button onClick={handleLogout}>{t?.common?.logout || 'Logout'}</button></li>
                   <li className='hover:text-white/80'><Link href='/change-password'>{t?.common?.changepassword || 'changepassword'}</Link></li>
                   <li className='hover:text-white/80'><Link href='/forgot-password'>{t?.common?.forgotpassword || 'forgotpassword'}</Link></li>
+                  <li className='hover:text-white/80'><Link href='/payment-history'>{t?.common?.historyPayment || 'historyPayment'}</Link></li>
                 </ul>
             </div>
           ) : (

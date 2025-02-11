@@ -7,12 +7,15 @@ import { Button } from '@/components/ui/button'
 import useTranslations from '@/hooks/useTranslations'
 import SearchModal from '@/components/SearchModal'
 import { Pagination, PaginationContent, PaginationEllipsis, PaginationItem, PaginationLink, PaginationNext, PaginationPrevious } from './ui/pagination'
-import { usePathname, useRouter } from 'next/navigation'
+import { usePathname, useRouter, useSearchParams } from 'next/navigation'
 import { useIsMobile } from './ui/use-mobile'
 import Loading from './Loading'
 import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken, uuidv4 } from '@/utils/helpers'
-import { getPhotos, getUserFaces, getUserTransactions, postInitTransactions, uploadFile } from '@/services'
+import { getPhotos, getUserFaces, getUserTransactions, postInitTransaction, postRemoveFace, uploadFile } from '@/services'
 import ModalQR from './ModalQR'
+import ConformPopup from './ConformPopup'
+import WrapperMasonry from './WrapperMasonry'
+import NotificationPopup from './NotificationPopup'
 type photoItem = {
   finalKey:string
   id:string
@@ -25,17 +28,34 @@ type PhotoList = {
   totalItems:number
   totalPages:number
 }
+
 export default function EventDetail({dataDetail, dataPhotoList, page, code}:{code:string,page: number,dataPhotoList:PhotoList, dataDetail:any}) {
   const { t }: {t:any} = useTranslations()
   const router = useRouter()
   const pathName = usePathname()
   const isMobile = useIsMobile()
+  const searchParams = useSearchParams()
+  const queryParams = searchParams.get('query') as string
+  const faceParams = searchParams.get('face') as string
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
+  const [isNotification, setIsNotification] = useState(false)
+
+  const [conform, setConform] = useState({
+    state: false,
+    faceId: ''
+  })
+
   const [statePhoto, setStatePhoto] = useState({
     dataPhotos: dataPhotoList?.photoItems ?? [],
     totalPages: dataPhotoList?.totalPages ?? 1,
   })
+
+  const [paymentInfo , setPaymentInfo] = useState<Payment>({
+    price: 0,
+    transCode: ''
+  })
+
   const {dataPhotos,totalPages} = statePhoto
   const [isLoading, setIsLoading] = useState(false)
   const [facesData, setFacesData] = useState([])
@@ -43,26 +63,26 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
 
    const handleModalSearch = useCallback(async (searchTerm: string, selectedFace: number | null) => {
     if (!dataDetail) return
-    const {data, message, status} = await getPhotos({eventCode:dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token})
+    const {data, status} = await getPhotos({eventCode:dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token})
     const dataResponse = data as PhotoList
-    alert(status)
     if (!status) {
       alert('search failed')
       return
     }
+    router.push(`${pathName}?query=${searchTerm}&face=${selectedFace?.toString()}`)
     setStatePhoto({
-      dataPhotos: dataResponse.photoItems,
+      dataPhotos: [...dataResponse.photoItems],
       totalPages: dataResponse.totalPages
     })
-    if (page) router.push(`${pathName}`)
+    // if (page) router.push(`${pathName}`)
   }, [dataDetail, token, page])
-  console.log(dataDetail)
   
   const handleGetUserFaces = useCallback(async () => {
     if (!token) return
     const {data} = await getUserFaces({token: token})
     setFacesData(data?.data ?? [])
   }, [token])
+
   useEffect(() => {
     if (token) {
       handleGetUserFaces()
@@ -90,23 +110,52 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
     }
     setIsSearchModalOpen(true)
   }
-
-  const handleTransactions = async () => {
+  console.log(dataPhotos)
+  
+  const handleTransactions = async ({finalKey}:{finalKey?:string}) => {
     setIsQRModalOpen(true)
-    // const response = await getUserTransactions({token: token, eventCode: code})
-    // console.log(response)
+    const typeBuy = finalKey ? 'ITEM' : 'LINK'
+    if (typeBuy === 'ITEM') {
+      const {data, status} = await postInitTransaction({token, eventCode: code, face: faceParams, query: queryParams, items: [], type: typeBuy})
+      // mua 1 ảnh
+      if (status) setPaymentInfo({price: data.price, transCode: data.transCode})
+      return
+    }
+    // mua tất cả
+    const {data, status} = await postInitTransaction({token, eventCode: code, face: faceParams, query: queryParams, type: typeBuy, items: []})
+    if (status) setPaymentInfo({price: data.price, transCode: data.transCode})
   }
 
-  const handleBuy = async () => {
-    // const response = await postInitTransactions({token, eventCode: code, face:'1', query:''})
-    // console.log(response)
+  const handleDeleteFace = async (faceId: string) => {
+    setConform({
+      state: true,
+      faceId
+    })
   }
+
+  const handleCallBackDelete = useCallback(async () => {
+   
+    if (conform.state){
+    const {status, data} = await postRemoveFace({token, faceId: conform.faceId})
+      console.log(data)
+      if (status) {
+        setFacesData((prev) => {
+          return prev.filter(({faceId: id}) => id !== conform.faceId)
+        })
+      }
+      setConform({faceId: '', state: false})
+    }
+  }, [conform.state])
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
       router.push(`${pathName}?page=${page}`)
       setIsLoading(true)
     }
+  }
+  const handleClickRightMouse = (e: React.MouseEvent<HTMLDivElement>) => {
+    e.preventDefault()
+    setIsNotification(true)
   }
   useEffect(() => {
     if (page) setIsLoading(false)
@@ -119,7 +168,10 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   if (endPage - startPage + 1 < maxVisiblePages) {
     startPage = Math.max(1, endPage - maxVisiblePages + 1);
   }
-  if (!dataDetail) return <div className="container mx-auto px-4 py-8">{t?.event?.notFound || 'Event not found'}</div>
+  if (!dataDetail) return <div className="container mx-auto px-4 py-8 text-xl font-medium text-center underline">
+    <h3>{t?.event?.notFound || 'Event not found'}</h3>
+    <Button className='mt-7' onClick={() => window.history.back()}>{t?.event?.back}</Button>
+  </div>
 
   return (
     <>
@@ -133,7 +185,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
           <p dangerouslySetInnerHTML={{__html: dataDetail?.description as string }}></p>
         </div>
         <div className="flex space-x-4">
-          <Button onClick={handleTransactions}>{t?.event?.registerNow || 'InitTransaction'}</Button>
+          {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={()=>handleTransactions({finalKey: ''})}>{t?.event?.registerNow || 'InitTransaction'}</Button>}
           <Button onClick={handleOpenModalSearch}>
             <Search className="w-4 h-4 mr-2" />
             {t?.search?.searchPhotos || 'Search Photos'}
@@ -142,16 +194,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
       </div>
       <div className="mt-12">
         <h2 className="text-2xl font-bold mb-4">{t?.event?.photos || 'Event Photos'}</h2>
-        <div className="grid grid-cols-1 md:grid-cols-3 lg:grid-cols-4 xl:grid-cols-4 gap-4">
-          {dataPhotos.map(({id,publicThumbUrl, finalKey}) => (
-            <div key={id} className="relative">
-              <img className='object-contain w-full h-full'
-              src={publicThumbUrl} 
-              alt={finalKey} 
-              loading='lazy'/>
-            </div>
-          ))}
-        </div>
+        <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} />
       </div>
       <Pagination>
         <PaginationContent>
@@ -218,9 +261,11 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
         onSearch={handleModalSearch}
         onUpload={handleUpload}
         facesData={facesData}
-        onBuy={handleBuy}
+        onDelete={handleDeleteFace}
       />
-      <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)}/>
+      <NotificationPopup isOpen={isNotification} onClose={() => setIsNotification(false)} des={t?.event?.notification || "This is just a thumbnail image, if you want to download the photo, click to see the photo and download the high quality photos!"} headerInfo={t?.event?.headerNotification || "Notification !"}/>
+      <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} paymentInfo={paymentInfo}/>
+      <ConformPopup isOpen={conform.state} onClose={() => setConform({faceId: '', state: false})} callBack={handleCallBackDelete}/>
     </div>
     </>
   )

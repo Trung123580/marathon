@@ -9,10 +9,10 @@ import { Label } from '@/components/ui/label'
 import useTranslations from '@/hooks/useTranslations'
 import { registerUser } from '@/services'
 import Loading from '@/components/Loading'
+import NotificationPopup from '@/components/NotificationPopup'
 
 export default function Register() {
   const { t, locale }: {t:any, locale:any} = useTranslations()
-  // const [name, setName] = useState('')
   const [stateDataForm, setStateDataFrom] = useState({
     email: '',
     password: '',
@@ -36,8 +36,6 @@ export default function Register() {
     }
     const {data, status} = await registerUser({ email, password})
     if (status){
-      console.log(data)
-      alert('register success')
       router.push('/login')
     }else {
       setError(locale === 'en' ? data?.en ?? 'There is an error that occurs' : data?.vi ?? 'có lỗi sảy ra')
@@ -52,8 +50,9 @@ export default function Register() {
     const value = e.target.value.toLowerCase().trim()
     setStateDataFrom(prev => ({...prev, [name]: value}))
   }
-  if (isLoading) return <Loading />
   return (
+   <>
+    {isLoading && <Loading />}
     <div className="container mx-auto px-4 py-8">
       <div className="max-w-md mx-auto">
         <h1 className="text-2xl font-bold mb-4">{t?.register?.title || 'Register'}</h1>
@@ -105,6 +104,7 @@ export default function Register() {
         </p>
       </div>
     </div>
+   </>
   )
 }
 

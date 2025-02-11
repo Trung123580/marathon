@@ -111,4 +111,15 @@
 }
 
 /* New gradient styles for primary buttons */
-
+.showAnimation{
+  animation: showAnimation 0.2s linear forwards;
+  transform-origin:  bottom center;
+}
+@keyframes showAnimation {
+  0% {
+    opacity: 0;
+  }
+  100% {
+    opacity: 1;
+  }
+}

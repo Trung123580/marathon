@@ -14,8 +14,12 @@
     "registerNow": "Mua kết quả tìm kiếm",
     "photos": "Hình Ảnh Sự Kiện",
     "notFound": "Không tìm thấy sự kiện",
-    "qrtitle": "QR thanh toán"
-
+    "qrtitle": "QR thanh toán",
+    "conform": "Xác nhận xoá ?",
+    "deleteText": "Bạn chắc chắn muốn xoá ảnh ?",
+    "headerNotification": "Thông báo !",
+    "notification": "Đây chỉ là ảnh thumbnail, nếu bạn muốn tải ảnh hãy bấm xem ảnh và tải ảnh chất lượng cao nhé!",
+    "back":"Quay lại"
   },
   "login": {
     "title": "Đăng nhập",
@@ -46,7 +50,8 @@
     "register": "Đăng ký",
     "logout": "Đăng xuất",
     "changepassword": "Đổi mật khẩu",
-    "forgotpassword": "Quên mật khẩu"
+    "forgotpassword": "Quên mật khẩu",
+    "historyPayment": "Lịch sử giao dịch"
   },
   "search": {
     "selectEvents": "Chọn hoặc tìm kiếm sự kiện",
@@ -54,8 +59,8 @@
     "event2": "Bán Marathon 2023",
     "event3": "Chạy 10K 2023",
     "button": "Tìm kiếm",
-    "buy": "Mua ngay"
-
+    "buy": "Mua ngay",
+    "searchBib": "từ khoá dài hơn 4 ký tự"
   },
   "about": {
     "title": "Về Chúng Tôi",
