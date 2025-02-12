@@ -179,7 +179,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   return (
     <>
       {isLoading && <Loading />}
-      <div className='h-screen relative'>
+      <div className='relative h-[calc(100vh_-_200px)]'>
         <Image src={dataDetail?.banner}layout='fill' objectFit='cover' priority alt=''></Image>
       </div>
       <div className='container mx-auto px-4 py-8 max-w-[1400px]'>
