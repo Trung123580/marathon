@@ -61,7 +61,9 @@
     "event3": "10K Run 2023",
     "button": "Search",
     "buy": "Buy",
-    "searchBib": "Keywords longer than 4 characters"
+    "searchBib": "Keywords longer than 4 characters",
+    "search": "Select Search",
+    "view": "View"
   },
   "about": {
     "title": "About Us",

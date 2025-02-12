@@ -42,7 +42,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [isNotification, setIsNotification] = useState(false)
-  console.log(dataDetail)
+  console.log(dataPhotoList)
   
   const [conform, setConform] = useState({
     state: false,
@@ -66,18 +66,21 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
 
    const handleModalSearch = useCallback(async (searchTerm: string, selectedFace: number | null) => {
     if (!dataDetail) return
+    setIsLoading(true)
     const {data, status} = await getPhotos({eventCode:dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token})
     const dataResponse = data as PhotoList
-    setStatePhoto({dataPhotos: [] ,totalPages: 1})
+    // setStatePhoto({dataPhotos: [] ,totalPages: 1})
     if (!status) {
       alert('search failed')
       return
     }
-    router.push(`${pathName}?query=${searchTerm}&face=${selectedFace?.toString()}`)
     setStatePhoto({
       dataPhotos: [...dataResponse.photoItems],
       totalPages: dataResponse.totalPages
     })
+    const newSearchParams = new URLSearchParams({ query: searchTerm, face: selectedFace?.toString() || '' })
+    window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
+    setIsLoading(false)
     // if (page) router.push(`${pathName}`)
   }, [dataDetail, token, page])
   
@@ -88,7 +91,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   }, [token])
 
   useEffect(() => {
-      handleGetUserFaces()
+     if (token)  handleGetUserFaces()
   }, [token])
   const handleUpload = async (file: File | null) => {
     if (file) {
