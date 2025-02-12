@@ -28,7 +28,9 @@ type PhotoList = {
   totalItems:number
   totalPages:number
 }
-
+// export const metadata = {
+//   title: 'About',
+// }
 export default function EventDetail({dataDetail, dataPhotoList, page, code}:{code:string,page: number,dataPhotoList:PhotoList, dataDetail:any}) {
   const { t }: {t:any} = useTranslations()
   const router = useRouter()
@@ -40,7 +42,8 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [isNotification, setIsNotification] = useState(false)
-
+  console.log(dataDetail)
+  
   const [conform, setConform] = useState({
     state: false,
     faceId: ''
@@ -175,98 +178,88 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
 
   return (
     <>
-    {isLoading && <Loading />}
-    <div className="container mx-auto px-4 py-8 max-w-[1400px]">
-      <h1 className="text-3xl font-bold mb-6">{dataDetail?.name}</h1>
-      <div className="space-y-4">
-        <p><strong>{t?.event?.date || 'Date'}:</strong> {dataDetail?.eventTime ?? ''}</p>
-        <div>
-          <strong>{t?.event?.description || 'Description'}:</strong>
-          <p dangerouslySetInnerHTML={{__html: dataDetail?.description as string }}></p>
-        </div>
-        <div className="flex space-x-4">
-          {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={()=>handleTransactions({finalKey: ''})}>{t?.event?.registerNow || 'InitTransaction'}</Button>}
-          <Button onClick={handleOpenModalSearch}>
-            <Search className="w-4 h-4 mr-2" />
-            {t?.search?.searchPhotos || 'Search Photos'}
-          </Button>
-        </div>
+      {isLoading && <Loading />}
+      <div className='h-screen relative'>
+        <Image src={dataDetail?.banner}layout='fill' objectFit='cover' priority alt=''></Image>
       </div>
-      <div className="mt-12">
-        <h2 className="text-2xl font-bold mb-4">{t?.event?.photos || 'Event Photos'}</h2>
-        <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} />
+      <div className='container mx-auto px-4 py-8 max-w-[1400px]'>
+        <h1 className='text-3xl font-bold mb-6'>{dataDetail?.name}</h1>
+        <div className='space-y-4'>
+          <p>
+            <strong>{t?.event?.date || "Date"}:</strong> {dataDetail?.eventTime ?? ""}
+          </p>
+          <div>
+            <strong>{t?.event?.description || "Description"}:</strong>
+            <p dangerouslySetInnerHTML={{ __html: dataDetail?.description as string }}></p>
+          </div>
+          <div className='flex space-x-4'>
+            {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => handleTransactions({ finalKey: "" })}>{t?.event?.registerNow || "InitTransaction"}</Button>}
+            <Button onClick={handleOpenModalSearch}>
+              <Search className='w-4 h-4 mr-2' />
+              {t?.search?.searchPhotos || "Search Photos"}
+            </Button>
+          </div>
+        </div>
+        <div className='mt-12'>
+          <h2 className='text-2xl font-bold mb-4'>{t?.event?.photos || "Event Photos"}</h2>
+          <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} />
+        </div>
+        <Pagination>
+          <PaginationContent>
+            {/* Nút Previous */}
+            <PaginationItem>
+              <PaginationPrevious onClick={() => goToPage(page - 1)} href='' className={page === 1 ? "pointer-events-none opacity-50" : ""} />
+            </PaginationItem>
+
+            {/* Hiển thị nút "1" nếu cần */}
+            {startPage > 1 && (
+              <>
+                <PaginationItem>
+                  <PaginationLink onClick={() => goToPage(1)}>1</PaginationLink>
+                </PaginationItem>
+                {startPage > 2 && <PaginationEllipsis />}
+              </>
+            )}
+
+            {/* Hiển thị các trang trong phạm vi */}
+            {[...Array(endPage - startPage + 1)].map((_, index) => {
+              const pageNumber = startPage + index
+              return (
+                <PaginationItem key={pageNumber}>
+                  <PaginationLink className={`w-8 h-8 ${page === pageNumber ? " bg-red-300" : ""}`} isActive={page === pageNumber} onClick={() => goToPage(pageNumber)}>
+                    {pageNumber}
+                  </PaginationLink>
+                </PaginationItem>
+              )
+            })}
+
+            {/* Hiển thị nút "totalPages" nếu cần */}
+            {endPage < totalPages && (
+              <>
+                {endPage < totalPages - 1 && <PaginationEllipsis />}
+                <PaginationItem>
+                  <PaginationLink onClick={() => goToPage(totalPages)}>{totalPages}</PaginationLink>
+                </PaginationItem>
+              </>
+            )}
+
+            {/* Nút Next */}
+            <PaginationItem>
+              <PaginationNext onClick={() => goToPage(page + 1)} className={page === totalPages ? "pointer-events-none opacity-50" : ""} />
+            </PaginationItem>
+          </PaginationContent>
+        </Pagination>
+
+        <SearchModal isOpen={isSearchModalOpen} onClose={() => setIsSearchModalOpen(false)} onSearch={handleModalSearch} onUpload={handleUpload} facesData={facesData} onDelete={handleDeleteFace} />
+        <NotificationPopup
+          isOpen={isNotification}
+          onClose={() => setIsNotification(false)}
+          des={t?.event?.notification || "This is just a thumbnail image, if you want to download the photo, click to see the photo and download the high quality photos!"}
+          headerInfo={t?.event?.headerNotification || "Notification !"}
+        />
+        <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} paymentInfo={paymentInfo} />
+        <ConformPopup isOpen={conform.state} onClose={() => setConform({ faceId: "", state: false })} callBack={handleCallBackDelete} />
       </div>
-      <Pagination>
-        <PaginationContent>
-          {/* Nút Previous */}
-          <PaginationItem>
-            <PaginationPrevious
-              onClick={() => goToPage(page - 1)}
-              href=''
-              className={page === 1 ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-
-          {/* Hiển thị nút "1" nếu cần */}
-          {startPage > 1 && (
-            <>
-              <PaginationItem >
-                <PaginationLink onClick={() => goToPage(1)}>1</PaginationLink>
-              </PaginationItem>
-              {startPage > 2 && <PaginationEllipsis />}
-            </>
-          )}
-
-          {/* Hiển thị các trang trong phạm vi */}
-          {[...Array(endPage - startPage + 1)].map((_, index) => {
-            const pageNumber = startPage + index;
-            return (
-              <PaginationItem key={pageNumber}>
-                <PaginationLink
-                  className={`w-8 h-8 ${page === pageNumber ? ' bg-red-300' : ''}`}
-                  isActive={page === pageNumber}
-                  onClick={() => goToPage(pageNumber)}
-                >
-                  {pageNumber}
-                </PaginationLink>
-              </PaginationItem>
-            );
-          })}
-
-          {/* Hiển thị nút "totalPages" nếu cần */}
-          {endPage < totalPages && (
-            <>
-              {endPage < totalPages - 1 && <PaginationEllipsis />}
-              <PaginationItem>
-                <PaginationLink onClick={() => goToPage(totalPages)}>
-                  {totalPages}
-                </PaginationLink>
-              </PaginationItem>
-            </>
-          )}
-
-          {/* Nút Next */}
-          <PaginationItem>
-            <PaginationNext
-              onClick={() => goToPage(page + 1)}
-              className={page === totalPages ? "pointer-events-none opacity-50" : ""}
-            />
-          </PaginationItem>
-        </PaginationContent>
-      </Pagination>
-
-      <SearchModal
-        isOpen={isSearchModalOpen}
-        onClose={() => setIsSearchModalOpen(false)}
-        onSearch={handleModalSearch}
-        onUpload={handleUpload}
-        facesData={facesData}
-        onDelete={handleDeleteFace}
-      />
-      <NotificationPopup isOpen={isNotification} onClose={() => setIsNotification(false)} des={t?.event?.notification || "This is just a thumbnail image, if you want to download the photo, click to see the photo and download the high quality photos!"} headerInfo={t?.event?.headerNotification || "Notification !"}/>
-      <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} paymentInfo={paymentInfo}/>
-      <ConformPopup isOpen={conform.state} onClose={() => setConform({faceId: '', state: false})} callBack={handleCallBackDelete}/>
-    </div>
     </>
   )
 }

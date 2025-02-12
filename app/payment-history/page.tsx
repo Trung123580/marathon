@@ -5,9 +5,8 @@ import PageComponent from "./PageComponent"
 const page = async () => {
   const cookiesParam = await cookies()
   const token = cookiesParam.get("token-app")?.value ?? ""
-  const response = await getUserTransactions({ token })
-  console.log(token, response)
-  return <PageComponent />
+  const {data} = await getUserTransactions({ token })
+  return <PageComponent dataHistory={data?.data ?? []}/>
 }
 
 export default page

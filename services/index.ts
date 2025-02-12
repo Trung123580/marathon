@@ -200,12 +200,14 @@ export const getUserTransactions = async ({token}: { token:string}) => {
         }
     }
 }
-export const postInitTransaction = async ({token, eventCode, query, face, items, type}: {items?: string[], type?: 'ITEM' | 'LINK', query:string, face?:string, eventCode?:string, token:string}) => {
+export const postInitTransaction = async ({token, eventCode, query, face, items, type}: {items?: string[], type?: 'ITEM' | 'LINK', query?:string, face?:string, eventCode?:string, token:string}) => {
     try {
         const response = await axiosInstance.post(`/Main/InitTransaction`,{
             eventCode,
             query,
-            face
+            face,
+            items,
+            type
         }, {
             headers :{
             'Authorization': `Bearer ${token}`

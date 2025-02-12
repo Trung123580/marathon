@@ -6,6 +6,7 @@ import Header from '@/components/Header'
 import Footer from '@/components/Footer'
 import PhotoSlider from '@/components/PhotoSlider'
 import { usePathname } from 'next/navigation'
+import path from 'path'
 
 export function RootLayoutContent({
   children,
@@ -13,8 +14,9 @@ export function RootLayoutContent({
   children: React.ReactNode
 }) {
   const pathname = usePathname()
-  const showPhotoSlider = !['/login', '/register', '/forgot-password', '/change-password'].includes(pathname)
-
+  const showPhotoSlider = ['login', 'register', 'forgot-password', 'change-password', 'event'].filter((item) => item !== '')
+  const spitPath = pathname.split('/').filter((item) => item !== '')
+  const isHidden = !showPhotoSlider.some((path) => path.includes(spitPath[0]))
   return (
     <ThemeProvider
       attribute="class"
@@ -24,8 +26,8 @@ export function RootLayoutContent({
     >
         <AuthProvider>
           <Header />
-          {showPhotoSlider && <PhotoSlider />}
-          <main className="flex-grow max-w-[1400px] mx-auto w-full px-4 sm:px-6 lg:px-8">
+          {isHidden && <PhotoSlider />}
+          <main className={`flex-grow mx-auto w-full ${spitPath[0] === 'event' ? '' : 'px-4 sm:px-6 lg:px-8'}`}>
             {children}
           </main>
           <Footer />

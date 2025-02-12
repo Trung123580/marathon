@@ -12,6 +12,31 @@ const notoSansVietnamese = Noto_Sans_Vietnamese({
 export const metadata: Metadata = {
   title: 'Marathon Event Photo',
   description: 'Capture your marathon moments',
+  manifest: "/favicon/site.webmanifest",
+  icons: {
+    icon: ["/favicon/favicon.ico?v=4"],
+    apple: ["/favicon/apple-touch-icon.png?v=4"],
+    shortcut: ["/favicon/apple-touch-icon.png"],
+  },
+  alternates: {
+    canonical: "/",
+    languages: {
+      'en-US': '/en-US',
+      'de-DE': '/de-DE',
+    },
+  },
+  openGraph: {
+    title: 'Marathon Event Photo',
+    description: 'Capture your marathon moments',
+    images: [
+      {
+        url: "/background.jpg",
+        type: "image/jpg",
+        width: 800,
+        height: 450,
+      },
+    ],
+  },
 }
 
 export default function RootLayout({
