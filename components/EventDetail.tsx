@@ -88,9 +88,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   }, [token])
 
   useEffect(() => {
-    if (token) {
       handleGetUserFaces()
-    }
   }, [token])
   const handleUpload = async (file: File | null) => {
     if (file) {
