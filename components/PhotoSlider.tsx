@@ -15,8 +15,8 @@ import { useAuth } from "@/contexts/AuthContext"
 import { uuidv4 } from "@/utils/helpers"
 
 const photos = [
-  { src: "/background.jpg", alt: "Runners at the starting line of a marathon" },
-  { src: "/background.jpg", alt: "Runners at the starting line of a marathon" },
+  { src: "/background.jpg", alt: "Runners at the starting line of a marathon", key: '123123xa4' },
+  { src: "/background.jpg", alt: "Runners at thn" , key:'s24s24ihdj2cc'},
 ]
 const PhotoSlider: React.FC = () => {
   const sliderRef = useRef<any | null>(null)
@@ -51,9 +51,9 @@ const PhotoSlider: React.FC = () => {
             fadeEffect={{ crossFade: true }}
             autoplay={{ delay: 3000 }}
             modules={[Autoplay]}>
-            {(Array.isArray(photos) ? photos : []).map((photo: any, index) => {
+            {(Array.isArray(photos) ? photos : []).map((photo, index) => {
               return (
-                <SwiperSlide key={uuidv4()}>
+                <SwiperSlide key={photo.key}>
                   <Image src={photo.src} alt={photo.alt} width={1400} height={600} style={{ objectFit: "cover", width: "100%", height: "100%" }} priority={index === 0} />
                 </SwiperSlide>
               )

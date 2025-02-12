@@ -37,8 +37,8 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   const pathName = usePathname()
   const isMobile = useIsMobile()
   const searchParams = useSearchParams()
-  const queryParams = searchParams.get('query') as string
-  const faceParams = searchParams.get('face') as string
+  const queryParams = searchParams.get('query') as string ?? ''
+  const faceParams = searchParams.get('face') as string ?? ''
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [isNotification, setIsNotification] = useState(false)
@@ -68,6 +68,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
     if (!dataDetail) return
     const {data, status} = await getPhotos({eventCode:dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token})
     const dataResponse = data as PhotoList
+    setStatePhoto({dataPhotos: [] ,totalPages: 1})
     if (!status) {
       alert('search failed')
       return
@@ -115,11 +116,11 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
   }
   console.log(dataPhotos)
   
-  const handleTransactions = async ({finalKey}:{finalKey?:string}) => {
+  const handleTransactions = async ({finalKey, publicUrl = ''}:{publicUrl?:string, finalKey?:string}) => {
     setIsQRModalOpen(true)
     const typeBuy = finalKey ? 'ITEM' : 'LINK'
     if (typeBuy === 'ITEM') {
-      const {data, status} = await postInitTransaction({token, eventCode: code, face: faceParams, query: queryParams, items: [], type: typeBuy})
+      const {data, status} = await postInitTransaction({token, eventCode: code, face: faceParams, query: queryParams, items: [publicUrl], type: typeBuy})
       // mua 1 ảnh
       if (status) setPaymentInfo({price: data.price, transCode: data.transCode})
       return
@@ -202,7 +203,7 @@ export default function EventDetail({dataDetail, dataPhotoList, page, code}:{cod
         </div>
         <div className='mt-12'>
           <h2 className='text-2xl font-bold mb-4'>{t?.event?.photos || "Event Photos"}</h2>
-          <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} />
+          <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} onBuy={handleTransactions}/>
         </div>
         <Pagination>
           <PaginationContent>

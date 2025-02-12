@@ -28,9 +28,11 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
       transCode: transCode
     })
   }
+  console.log(dataHistory)
+  
   return (
     <>
-      <section className='mt-10'>
+      <section className='mt-10 container mx-auto px-4 max-w-[1400px]'>
       <h1 className='text-3xl font-bold mb-3'>{t?.common?.historyPayment}</h1>
       <div className='relative overflow-x-auto mb-6 overflow-y-auto max-h-[50vh]'>
         <table className='w-full text-sm text-left rtl:text-right text-gray-500 '>
@@ -50,7 +52,7 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
               return (
                 <tr key={id} className='bg-white border-b font-medium text-sm text-black border-gray-200'>
                   <th scope='row' className='px-6 py-4 font-medium whitespace-nowrap '>
-                    <a href={contentPreview} className="text-blue-500 cursor-pointer hover:underline">{contentPreview}</a>
+                    <a target="_blank" href={contentPreview} className="text-blue-500 cursor-pointer hover:underline">{contentPreview}</a>
                   </th>
                   <td className='px-6 py-4'>{eventCode}</td>
                   <td className='px-6 py-4'>{finalPrice}</td>
