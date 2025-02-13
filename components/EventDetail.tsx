@@ -1,6 +1,6 @@
 "use client"
 
-import { useCallback, useEffect, useRef, useState } from "react"
+import { ReactNode, useCallback, useEffect, useRef, useState } from "react"
 import Image from "next/image"
 import { Search } from "lucide-react"
 import { Button } from "@/components/ui/button"
@@ -184,7 +184,21 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
         </Button>
       </div>
     )
+    useEffect(() => {
+      // chặn giữ nhấp ảnh lâu dài trên mobi
+      document.addEventListener("contextmenu", (event) => event.preventDefault()) // Chặn menu ngữ cảnh
+      let timer: NodeJS.Timeout
 
+      document.addEventListener("touchstart", (event) => {
+        timer = setTimeout(() => {
+          event.preventDefault()
+          console.log("Long press detected")
+        }, 500)
+      })
+
+      document.addEventListener("touchend", () => clearTimeout(timer)) // Hủy khi thả tay
+      document.addEventListener("touchmove", () => clearTimeout(timer)) // Hủy nếu vuốt 
+    }, [])
   return (
     <>
       {isLoading && <Loading />}
