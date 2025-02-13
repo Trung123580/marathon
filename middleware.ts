@@ -9,6 +9,9 @@ export function middleware(request: NextRequest) {
   if (!token && request.nextUrl.pathname === "/change-password") {
     return NextResponse.redirect(new URL("/", request.url))
   }
+  if (request.nextUrl.pathname === '/'){
+    return NextResponse.redirect(new URL("/event/mangdenultratrail2025", request.url)) // để tạm thời
+  }
   // You can keep any other middleware logic here if needed
   return NextResponse.next()
 }

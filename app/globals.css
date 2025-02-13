@@ -123,3 +123,27 @@
     opacity: 1;
   }
 }
+.scaleAnimation {
+  animation: scaleAnimation 1.5s ease-in-out infinite;
+  transform-origin: center;
+}
+@keyframes scaleAnimation {
+  0% {
+    scale: .8;
+  }
+  25% {
+    scale: .85;
+  }
+  50% {
+    scale: .9;
+  }
+  75% {
+    scale: .9;
+  }
+  80% {
+    scale: 1;
+  }
+  100% {
+    scale: 1;
+  }
+}

@@ -7,6 +7,7 @@ import Footer from '@/components/Footer'
 import PhotoSlider from '@/components/PhotoSlider'
 import { usePathname } from 'next/navigation'
 import path from 'path'
+import SupportBtn from './SupportBtn'
 
 export function RootLayoutContent({
   children,
@@ -31,6 +32,7 @@ export function RootLayoutContent({
             {children}
           </main>
           <Footer />
+          <SupportBtn />
         </AuthProvider>
     </ThemeProvider>
   )

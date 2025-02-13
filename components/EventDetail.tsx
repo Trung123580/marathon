@@ -42,7 +42,6 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   const [isSearchModalOpen, setIsSearchModalOpen] = useState(false)
   const [isQRModalOpen, setIsQRModalOpen] = useState(false)
   const [isNotification, setIsNotification] = useState(false)
-  console.log(dataPhotoList)
 
   const [conform, setConform] = useState({
     state: false,
@@ -118,7 +117,6 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     }
     setIsSearchModalOpen(true)
   }
-  console.log(dataPhotos)
 
   const handleTransactions = async ({ finalKey, publicUrl = "" }: { publicUrl?: string; finalKey?: string }) => {
     setIsQRModalOpen(true)
@@ -147,7 +145,6 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   const handleCallBackDelete = useCallback(async () => {
     if (conform.state) {
       const { status, data } = await postRemoveFace({ token, faceId: conform.faceId })
-      console.log(data)
       if (status) {
         setFacesData((prev) => {
           return prev.filter(({ faceId: id }) => id !== conform.faceId)

@@ -34,7 +34,8 @@ export default function Header() {
     { href: `/payment-history`, label: t?.common?.historyPayment || "historyPayment" },
   ]
   return (
-    <header className='sticky top-0 z-50 w-full border-b bg-gradient-to-r from-[#fd652c] to-[#eb172b] text-white'>
+    <header className='sticky top-0 z-50 w-full bg-gradient-to-r from-[#fd652c] to-[#eb172b] text-white'>
+      {/* border-b */}
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center'>
         <div className='flex items-center space-x-2'>
           <Link href={"/"}>

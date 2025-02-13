@@ -69,11 +69,11 @@ const PhotoSlider: React.FC = () => {
           {!isShow ? (
             <></>
           ) : (
-            <div className='absolute bottom-0 left-0 right-0 bg-[#fd652c] bg-opacity-60 p-4 z-20'>
-              <div className='max-w-[600px] mx-auto flex flex-col sm:flex-row gap-2'>
+            <div className='absolute bottom-0 left-0 right-0 bg-black/30 bg-opacity-60 p-4 z-20'>
+              <div className='max-w-[600px] mx-auto flex flex-col sm:flex-row gap-2 items-center justify-center'>
                 <div className='relative w-full sm:w-[450px] z-30'>
                   <Combobox value={selected} onChange={setSelected}>
-                    <div className='relative mt-1'>
+                    <div className='relative'>
                       <div className='relative w-full cursor-default overflow-hidden rounded-lg bg-white text-left shadow-md focus:outline-none focus-visible:ring-2 focus-visible:ring-white focus-visible:ring-opacity-75 focus-visible:ring-offset-2 focus-visible:ring-offset-teal-300 sm:text-sm'>
                         <Combobox.Input
                           className='w-full border-none py-2 pl-3 pr-10 text-sm leading-5 text-gray-900 focus:ring-0'
@@ -91,7 +91,7 @@ const PhotoSlider: React.FC = () => {
                           <div className='relative cursor-default select-none py-2 px-4 text-gray-700'>Nothing found.</div>
                         ) : (
                           filteredEvents.map((event) => (
-                            <Combobox.Option key={event.id} className={({ active }) => `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "bg-teal-600 text-white" : "text-gray-900"}`} value={event}>
+                            <Combobox.Option key={event.id} className={({ active }) => `relative cursor-default select-none py-2 pl-10 pr-4 ${active ? "btn-primary-gradient text-white" : "text-gray-900"}`} value={event}>
                               {({ selected, active }) => (
                                 <>
                                   <span className={`block truncate ${selected ? "font-medium" : "font-normal"}`}>{event.name}</span>

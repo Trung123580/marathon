@@ -28,8 +28,6 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
       transCode: transCode
     })
   }
-  console.log(dataHistory)
-  
   return (
     <>
       <section className='mt-10 container mx-auto px-4 max-w-[1400px]'>
@@ -52,7 +50,9 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
               return (
                 <tr key={id} className='bg-white border-b font-medium text-sm text-black border-gray-200'>
                   <th scope='row' className='px-6 py-4 font-medium whitespace-nowrap '>
-                    <a target="_blank" href={contentPreview} className="text-blue-500 cursor-pointer hover:underline">{contentPreview}</a>
+                    <Button className="p-0">
+                      <a target="_blank" className="px-4 w-full h-full flex items-center justify-center" href={contentPreview}>{t?.search.view}</a>
+                     </Button>
                   </th>
                   <td className='px-6 py-4'>{eventCode}</td>
                   <td className='px-6 py-4'>{finalPrice}</td>
