@@ -20,7 +20,8 @@
     "headerNotification": "Thông báo !",
     "notification": "Đây chỉ là ảnh thumbnail, nếu bạn muốn tải ảnh hãy bấm xem ảnh và tải ảnh chất lượng cao nhé!",
     "back":"Quay lại",
-    "bought": "Đã mua"
+    "bought": "Đã mua",
+    "noPhotos" : "Không tìm thấy ảnh"
   },
   "login": {
     "title": "Đăng nhập",

@@ -12,7 +12,6 @@ import useTranslations from "@/hooks/useTranslations"
 import "swiper/css"
 import { usePathname, useRouter } from "next/navigation"
 import { useAuth } from "@/contexts/AuthContext"
-import { uuidv4 } from "@/utils/helpers"
 
 const photos = [
   { src: "/background.jpg", alt: "Runners at the starting line of a marathon", key: '123123xa4' },
@@ -46,7 +45,7 @@ const PhotoSlider: React.FC = () => {
             className='h-full w-full overflow-hidden'
             slidesPerView={"auto"}
             spaceBetween={0}
-            loop={true}
+            // loop={true}
             effect='fade'
             fadeEffect={{ crossFade: true }}
             autoplay={{ delay: 3000 }}
@@ -59,14 +58,14 @@ const PhotoSlider: React.FC = () => {
               )
             })}
           </Swiper>
-          {/* <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between w-full px-4 sm:px-6 lg:px-8'>
-            <button className='bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 z-10' onClick={() => sliderRef?.slickPrev()}>
+          {photos.length === 1 ? <></> : <div className='absolute top-0 left-0 right-0 bottom-0 flex items-center justify-between w-full px-4 sm:px-6 lg:px-8'>
+            <button className='bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 z-10' onClick={() => sliderRef.current?.swiper.slidePrev()}>
               <ChevronLeft className='w-6 h-6 text-black' />
             </button>
-            <button className='bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 z-10' onClick={() => sliderRef?.slickNext()}>
+            <button className='bg-white bg-opacity-50 hover:bg-opacity-75 rounded-full p-2 transition-opacity opacity-0 group-hover:opacity-100 z-10' onClick={() => sliderRef.current?.swiper.slideNext()}>
               <ChevronRight className='w-6 h-6 text-black' />
             </button>
-          </div> */}
+          </div>}
           {!isShow ? (
             <></>
           ) : (
