@@ -108,9 +108,9 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
             </div>}
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
-            <Label htmlFor="file" className="col-span-4">
+            {/* <Label htmlFor="file" className="col-span-4">
               {t?.search?.uploadFile || "Upload File"}
-            </Label>
+            </Label> */}
             <Input
               id="file"
               type="file"

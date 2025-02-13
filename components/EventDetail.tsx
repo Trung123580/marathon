@@ -119,6 +119,10 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   }
 
   const handleTransactions = async ({ finalKey, publicUrl = "" }: { publicUrl?: string; finalKey?: string }) => {
+    if (!token) {
+      router.push('/login')
+      return
+    }
     setIsQRModalOpen(true)
     setIsLoading(true)
     const typeBuy = finalKey ? "ITEM" : "LINK"
@@ -202,8 +206,9 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   return (
     <>
       {isLoading && <Loading />}
-      <div className='relative md:h-[calc(75vh)] h-[calc(50vh)]'>
-        <Image src={dataDetail?.banner} layout='fill' objectFit='cover' priority alt=''></Image>
+      <div className='relative md:h-[calc(75vh)]'>
+        <Image src={dataDetail?.banner} layout='fill' objectFit='contain md:block' priority alt=''></Image>
+        <Image src={dataDetail?.banner} width={1000} height={500} objectFit='contain md:hidden block w-full h-full' priority alt=''></Image>
       </div>
       <div className='container mx-auto px-4 py-8 max-w-[1400px]'>
         <h1 className='text-3xl font-bold mb-6'>{dataDetail?.name}</h1>

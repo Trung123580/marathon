@@ -63,7 +63,14 @@
     "buy": "Buy",
     "searchBib": "Keywords longer than 4 characters",
     "search": "Select Search",
-    "view": "View"
+    "view": "View",
+    "searchPhotos": "search Photos",
+    "advancedSearch": "Advanced Search",
+    "advancedSearchDescription": "Use the options below to perform an advanced search.",
+    "searchTerm": "Search Term",
+    "searchPlaceholder": "Enter search term",
+    "selectFace": "Select a face to search",
+    "searchButton": "Search"
   },
   "about": {
     "title": "About Us",

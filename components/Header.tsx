@@ -38,17 +38,17 @@ export default function Header() {
       {/* border-b */}
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center'>
         <div className='flex items-center space-x-2'>
-          <Link href={"/"}>
+          <a href={"/"}>
             <h1 className='font-bold text-xl text-white'>Ảnh Sự Kiện Marathon</h1>
-          </Link>
+          </a>
         </div>
         <nav className='hidden md:flex ml-auto items-center space-x-4 lg:space-x-6'>
           {navItems.map((item) => {
             if (item.href === "/change-password" || item.href === "/forgot-password" || item.href === "/payment-history") return <React.Fragment key={uuidv4()}></React.Fragment>
             return (
-              <Link key={uuidv4()} href={item.href} className='text-sm font-medium hover:text-white/80 flex items-center space-x-2'>
-                {item.icon && <item.icon className='w-4 h-4' />}
-                <span className={`${!!item.icon ? "mt-1" : ""}`}>{item.label}</span>
+              <Link key={uuidv4()} href={item.href} className='text-sm font-medium h-10 text-white hover:text-white/80 flex items-center justify-center space-x-2 '>
+                {item.icon && <item.icon className='w-4 h-4 relative -top-[2.7px]' />}
+                <span >{item.label}</span>
               </Link>
             )
           })}
@@ -61,7 +61,7 @@ export default function Header() {
                   <path fill="white" d='M224 256A128 128 0 1 0 224 0a128 128 0 1 0 0 256zm-45.7 48C79.8 304 0 383.8 0 482.3C0 498.7 13.3 512 29.7 512l388.6 0c16.4 0 29.7-13.3 29.7-29.7C448 383.8 368.2 304 269.7 304l-91.4 0z' />
                 </svg>
               </button>
-              <ul className='group-hover:block hidden absolute top-full left-1/2 -translate-x-1/2 rounded-md bg-slate-800 *:text-nowrap px-4 py-2 text-sm '>
+              <ul className='group-hover:block hidden absolute top-full left-1/2 -translate-x-1/2 rounded-md bg-slate-800 *:text-nowrap px-4 py-2 text-sm *:py-1'>
                 <li className='hover:text-white/80'>
                   <button onClick={handleLogout}>{t?.common?.logout || "Logout"}</button>
                 </li>

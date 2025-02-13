@@ -64,7 +64,14 @@
     "buy": "Mua ngay",
     "searchBib": "từ khoá dài hơn 4 ký tự",
     "search": "Chọn Tìm kiếm",
-    "view": "Xem" 
+    "view": "Xem",
+    "searchPhotos": "Tìm kiếm ảnh",
+    "advancedSearch": "Tìm kiếm nâng cao",
+    "advancedSearchDescription": "Tìm kiếm theo cả số Bib và khuôn mặt để cho ra nhiều kết quả hơn",
+    "searchTerm": "Nhập vào số BIB",
+    "searchPlaceholder": "Nhập thuật ngữ tìm kiếm",
+    "selectFace": "Tìm theo khuôn mặt, nếu chưa có bạn hãy tải ảnh có 1 khuôn mặt lên",
+    "searchButton": "Tìm kiếm"
   },
   "about": {
     "title": "Về Chúng Tôi",

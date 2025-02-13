@@ -46,7 +46,7 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
         },
         display: {
           left: ["infobar"],
-          middle: ["zoomIn", "zoomOut", "toggle1to1", "rotateCCW", "rotateCW", "flipX", "flipY"],
+          middle: [],
           right: ["download", "slideshow", "fullscreen", "thumbs", "close"],
         },
       },
