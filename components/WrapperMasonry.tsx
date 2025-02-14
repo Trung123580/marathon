@@ -71,7 +71,7 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
               <Image src={photo.publicThumbUrl} className='object-contain rounded-lg' priority quality={100} alt='' width={500} height={500} />
             </a>
             {!!photo?.isPaid ? (
-              <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-red-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
+              <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-blue-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
             ) : (
               <button onClick={() => onBuy({finalKey: 'ITEM', publicUrl: photo.publicUrl})} className=' md:hidden text-white showAnimation group-hover:block w-full absolute bottom-0 left-1/2 -translate-x-1/2  bg-red-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>
                 {t?.search?.buy}
