@@ -3,6 +3,7 @@ import { getEventDetail, getPhotos } from '@/services'
 import { uuidv4 } from '@/utils/helpers'
 import React from 'react'
 import type { Metadata, ResolvingMetadata } from 'next'
+import { cookies } from "next/headers"
  
 type Props = {
   params: Promise<{ code: string }>
@@ -29,7 +30,9 @@ const page = async ({ params, searchParams }: Props) => {
   const code = (await params).code ?? ''
   const page = (await searchParams).page ?? 1
   const {data} = await getEventDetail({code: code, source: process.env.NEXT_PUBLIC_SOURCE as string})
-  const {data:PhotoData} = await getPhotos({eventCode:code, page: Number(page)})
+  const cookiesParam = await cookies()
+  const token = cookiesParam.get("token-app")?.value ?? ""
+  const {data:PhotoData} = await getPhotos({eventCode:code, page: Number(page), token: token})
   return (
     <EventDetail key={uuidv4()} dataDetail={data} code={code} dataPhotoList={PhotoData} page={Number(page)}/>
   )
