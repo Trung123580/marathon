@@ -11,7 +11,7 @@
   "event": {
     "date": "Date",
     "description": "Description",
-    "registerNow": "Init Transaction",
+    "registerNow": "Buy this result",
     "photos": "Event Photos",
     "notFound": "Event not found",
     "qrtitle": "QR Payment",

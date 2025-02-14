@@ -6,14 +6,14 @@ import en from '@/locales/en.json'
 import vi from '@/locales/vi.json'
 
 const useTranslations = () => {
-  const [locale, setLocale] = useState<'en' | 'vi'>('en')
+  const [locale, setLocale] = useState<'en' | 'vi'>('vi')
 
   useEffect(() => {
-    const savedLocale = getCookie('NEXT_LOCALE') as 'en' | 'vi'
-    setLocale(savedLocale || 'en')
+    const savedLocale = getCookie('NEXT_LOCALE') as 'vi' | 'en'
+    setLocale(savedLocale || 'vi')
   }, [])
 
-  const t = locale === 'en' ? en : vi
+  const t = locale === 'vi' ? vi : en
 
   const changeLanguage = (newLocale: 'en' | 'vi') => {
     setLocale(newLocale)

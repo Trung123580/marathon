@@ -39,7 +39,7 @@ export default function Header() {
       <div className='max-w-[1400px] mx-auto px-4 sm:px-6 lg:px-8 flex h-14 items-center'>
         <div className='flex items-center space-x-2'>
           <a href={"/"}>
-            <h1 className='font-bold text-xl text-white'>Ảnh Sự Kiện Marathon</h1>
+            <h1 className='font-bold text-xl text-white'>Tiệm ảnh đẹp</h1>
           </a>
         </div>
         <nav className='hidden md:flex ml-auto items-center space-x-4 lg:space-x-6'>

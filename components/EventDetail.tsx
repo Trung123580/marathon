@@ -203,6 +203,8 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
       document.addEventListener("touchend", () => clearTimeout(timer)) // Hủy khi thả tay
       document.addEventListener("touchmove", () => clearTimeout(timer)) // Hủy nếu vuốt 
     }, [])
+    console.log(dataPhotos);
+    
   return (
     <>
       {isLoading && <Loading />}
@@ -217,11 +219,11 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
             <strong>{t?.event?.date || "Date"}:</strong> {dataDetail?.eventTime ?? ""}
           </p>
           <div>
-            <strong>{t?.event?.description || "Description"}:</strong>
+            {/* <strong>{t?.event?.description || "Description"}:</strong> */}
             <p className="leading-8" dangerouslySetInnerHTML={{ __html: dataDetail?.description as string }}></p>
           </div>
           <div className='flex space-x-4'>
-            {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => handleTransactions({ finalKey: "" })}>{t?.event?.registerNow || "InitTransaction"}</Button>}
+            {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => handleTransactions({ finalKey: "" })}>{t?.event?.registerNow || "Buy this result"}</Button>}
             <Button onClick={handleOpenModalSearch}>
               <Search className='w-4 h-4 mr-2' />
               {t?.search?.searchPhotos || "Search Photos"}
@@ -241,7 +243,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
           <>
             <div className='mt-12'>
               <h2 className='text-2xl font-bold mb-4'>{t?.event?.photos || "Event Photos"}</h2>
-              <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} onBuy={handleTransactions} />
+              <WrapperMasonry key={uuidv4()} data={dataPhotos} onClickRightMouse={handleClickRightMouse} onBuy={handleTransactions} />
             </div>
             <Pagination>
               <PaginationContent>
