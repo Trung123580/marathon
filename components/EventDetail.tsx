@@ -218,7 +218,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
           </p>
           <div>
             <strong>{t?.event?.description || "Description"}:</strong>
-            <p dangerouslySetInnerHTML={{ __html: dataDetail?.description as string }}></p>
+            <p className="leading-8" dangerouslySetInnerHTML={{ __html: dataDetail?.description as string }}></p>
           </div>
           <div className='flex space-x-4'>
             {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => handleTransactions({ finalKey: "" })}>{t?.event?.registerNow || "InitTransaction"}</Button>}
