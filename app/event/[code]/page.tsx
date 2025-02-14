@@ -29,10 +29,12 @@ export async function generateMetadata(
 const page = async ({ params, searchParams }: Props) => {
   const code = (await params).code ?? ''
   const page = (await searchParams).page ?? 1
+  const query = (await searchParams).query ?? ''
+  const face = (await searchParams).face ?? ''
   const {data} = await getEventDetail({code: code, source: process.env.NEXT_PUBLIC_SOURCE as string})
   const cookiesParam = await cookies()
   const token = cookiesParam.get("token-app")?.value ?? ""
-  const {data:PhotoData} = await getPhotos({eventCode:code, page: Number(page), token: token})
+  const {data:PhotoData} = await getPhotos({eventCode:code, page: Number(page), token: token, face: String(face), query: String(query)})
   return (
     <EventDetail key={uuidv4()} dataDetail={data} code={code} dataPhotoList={PhotoData} page={Number(page)}/>
   )
