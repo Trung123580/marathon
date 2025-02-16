@@ -155,8 +155,8 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
         })
       }
       setConform({ faceId: "", state: false })
-      const newSearchParams = new URLSearchParams()
-      window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
+      // const newSearchParams = new URLSearchParams()
+      // window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
     }
   }, [conform.state])
 
