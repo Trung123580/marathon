@@ -243,7 +243,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
           <>
             <div className='mt-12'>
               <h2 className='text-2xl font-bold mb-4'>{t?.event?.photos || "Event Photos"}</h2>
-              <WrapperMasonry key={uuidv4()} data={dataPhotos} onClickRightMouse={handleClickRightMouse} onBuy={handleTransactions} />
+              <WrapperMasonry data={dataPhotos} onClickRightMouse={handleClickRightMouse} onBuy={handleTransactions} />
             </div>
             <Pagination>
               <PaginationContent>
