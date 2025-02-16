@@ -30,7 +30,6 @@ export default function Login() {
       return
     }
     const success = await login(email, password)
-    console.log(success)
     if (success) {
       router.replace('/')
     } else {

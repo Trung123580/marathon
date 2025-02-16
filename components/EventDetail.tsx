@@ -198,14 +198,12 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
       document.addEventListener("touchstart", (event) => {
         timer = setTimeout(() => {
           event.preventDefault()
-          console.log("Long press detected")
         }, 500)
       })
 
       document.addEventListener("touchend", () => clearTimeout(timer)) // Hủy khi thả tay
       document.addEventListener("touchmove", () => clearTimeout(timer)) // Hủy nếu vuốt 
     }, [])
-    console.log(dataPhotos);
     
   return (
     <>
