@@ -71,7 +71,9 @@
     "searchTerm": "Nhập vào số BIB",
     "searchPlaceholder": "Nhập thuật ngữ tìm kiếm",
     "selectFace": "Tìm theo khuôn mặt, nếu chưa có bạn hãy tải ảnh có 1 khuôn mặt lên",
-    "searchButton": "Tìm kiếm"
+    "searchButton": "Tìm kiếm",
+    "uploadImage": "Tải ảnh lên & chọn ảnh"
+
   },
   "about": {
     "title": "Về Chúng Tôi",

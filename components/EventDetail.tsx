@@ -64,7 +64,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   const token = handleGetCookie({ key: "token-app" }) as string
 
   const handleModalSearch = useCallback(
-    async (searchTerm: string, selectedFace: number | null) => {
+    async (searchTerm: string, selectedFace: string | null) => {
       if (!dataDetail) return
       setIsLoading(true)
       const { data, status } = await getPhotos({ eventCode: dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token })
@@ -155,6 +155,8 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
         })
       }
       setConform({ faceId: "", state: false })
+      const newSearchParams = new URLSearchParams()
+      window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
     }
   }, [conform.state])
 

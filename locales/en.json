@@ -70,7 +70,8 @@
     "searchTerm": "Search Term",
     "searchPlaceholder": "Enter search term",
     "selectFace": "Select a face to search",
-    "searchButton": "Search"
+    "searchButton": "Search",
+    "uploadImage": "Upload photos & select photos"
   },
   "about": {
     "title": "About Us",
