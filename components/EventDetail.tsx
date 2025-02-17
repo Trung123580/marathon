@@ -221,6 +221,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     if (page) setIsLoading(false)
   }, [page])
 
+ 
   const maxVisiblePages = isMobile ? 4 : 7
   let startPage = Math.max(1, page - Math.floor(maxVisiblePages / 2))
   let endPage = Math.min(totalPages, startPage + maxVisiblePages - 1)
@@ -228,7 +229,8 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   if (endPage - startPage + 1 < maxVisiblePages) {
     startPage = Math.max(1, endPage - maxVisiblePages + 1)
   }
-  if (!dataDetail)
+  
+  if (!dataDetail){
     return (
       <div className='container mx-auto px-4 py-8 text-xl font-medium text-center underline'>
         <h3>{t?.event?.notFound || "Event not found"}</h3>
@@ -237,20 +239,9 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
         </Button>
       </div>
     )
-    useEffect(() => {
-      // chặn giữ nhấp ảnh lâu dài trên mobi
-      document.addEventListener("contextmenu", (event) => event.preventDefault()) // Chặn menu ngữ cảnh
-      let timer: NodeJS.Timeout
-
-      document.addEventListener("touchstart", (event) => {
-        timer = setTimeout(() => {
-          event.preventDefault()
-        }, 500)
-      })
-
-      document.addEventListener("touchend", () => clearTimeout(timer)) // Hủy khi thả tay
-      document.addEventListener("touchmove", () => clearTimeout(timer)) // Hủy nếu vuốt 
-    }, [])
+  }
+    
+    
     
   return (
     <>

@@ -29,19 +29,28 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
     link.click()
     URL.revokeObjectURL(link.href)
   }
-
+  const preventContextMenu = (event: Event) => event.preventDefault()
+  const handleTouchStart = (event: TouchEvent) => event.preventDefault()
   useEffect(() => {
     NativeFancybox.bind("[data-fancybox]", {
       Carousel: {
         infinite: false,
       },
+      on: {
+        ready: () => {
+          document.removeEventListener("contextmenu", preventContextMenu)
+          document.removeEventListener("touchstart", handleTouchStart)
+        },
+        close: () => {
+          document.addEventListener("contextmenu", preventContextMenu)
+          document.addEventListener("touchstart", handleTouchStart)
+        },
+      },
       Toolbar: {
         items: {
           download: {
             tpl: `<button class="f-button"><svg tabindex="-1" width="24" height="24" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M4 17v2a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-2M7 11l5 5 5-5M12 4v12"></path></svg></button>`,
-            click: () => {
-              downloadImage()
-            },
+            click: () => downloadImage()
           },
         },
         display: {
@@ -55,7 +64,6 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
       NativeFancybox.destroy()
     }
   }, [])
-
   return (
     <ResponsiveMasonry className='' columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1024: 4 }}>
       <Masonry
