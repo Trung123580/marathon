@@ -20,7 +20,9 @@
     "headerNotification": "Notification !",
     "notification": "This is just a thumbnail image, if you want to download the photo, click to see the photo and download the high quality photos!",
     "back":"Back",
-    "bought": "Paid"
+    "bought": "Paid",
+    "titleSearchBIB": "You haven't chosen Face still search",
+    "descriptionBIB": "You have not yet chosen the face, searching for a combination of face will add more complete results. Are you sure to continue searching only Bib?"
   },
   "login": {
     "title": "Login",

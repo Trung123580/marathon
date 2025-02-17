@@ -32,11 +32,11 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
   const [error, setError] = useState('')
   const refInput = useRef<HTMLInputElement | null>(null)
   
-  useLayoutEffect(() => {
-    if (facesData.length > 0) {
-      setSelectedFace(facesData[0].faceKey)
-    }
-  }, [facesData])
+  // useLayoutEffect(() => {
+  //   if (facesData.length > 0) {
+  //     setSelectedFace(facesData[0].faceKey)
+  //   }
+  // }, [facesData])
   
   const handleModalSearch = () => {
     if (modalSearchInput.length > 0 && modalSearchInput.length < 4) {
@@ -46,7 +46,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
     onSearch(modalSearchInput, selectedFace)
     onClose()
     setModalSearchInput('')
-    // setSelectedFace('')
+    setSelectedFace('')
     if (refInput.current) refInput.current.value = ''
   }
 
@@ -57,6 +57,7 @@ const SearchModal: React.FC<SearchModalProps> = ({ isOpen, onClose, onSearch, on
         return alert('File size is too large')
       }
       onUpload(event.target.files[0])
+      event.target.value = ''
     }
   }
   return (

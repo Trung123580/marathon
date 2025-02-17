@@ -147,3 +147,7 @@
     mask-position: 0% 0px;
   }
 }
+.bg-primary {
+  background: linear-gradient(to right, #fd652c, #eb172b);
+  transition: opacity 0.3s ease;
+}

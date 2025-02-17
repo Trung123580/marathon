@@ -47,6 +47,10 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     state: false,
     faceId: "",
   })
+  const [conformFace, setConformFace] = useState({
+    state: false,
+    searchTermValue: ""
+  })
 
   const [statePhoto, setStatePhoto] = useState({
     dataPhotos: dataPhotoList?.photoItems ?? [],
@@ -62,10 +66,44 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   const [isLoading, setIsLoading] = useState(false)
   const [facesData, setFacesData] = useState([])
   const token = handleGetCookie({ key: "token-app" }) as string
+  const handleCallBackSearchFace = useCallback(
+    async (searchTerm?: string, selectedFace?: string | null) => {
+      if (!dataDetail) return
+      setIsLoading(true)
+      
+      const { data, status } = await getPhotos({ eventCode: dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token })
+      const dataResponse = data as PhotoList
+      // setStatePhoto({dataPhotos: [] ,totalPages: 1})
+      if (!status) {
+        alert("search failed")
+        return
+      }
+      setStatePhoto({
+        dataPhotos: [...dataResponse.photoItems],
+        totalPages: dataResponse.totalPages,
+      })
+      const newSearchParams = new URLSearchParams({ query: searchTerm ?? '', face: '' })
+      window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
+      setIsLoading(false)
+      setConformFace({
+        state: false,
+        searchTermValue: ''
+      })
+      // if (page) router.push(`${pathName}`)
+    },
+    [dataDetail, token, page]
+  )
 
   const handleModalSearch = useCallback(
-    async (searchTerm: string, selectedFace: string | null) => {
+    async (searchTerm?: string, selectedFace?: string | null) => {
       if (!dataDetail) return
+      if (!selectedFace && searchTerm) {
+        setConformFace({
+          state: true,
+          searchTermValue: searchTerm as string
+        })
+        return
+      }
       setIsLoading(true)
       const { data, status } = await getPhotos({ eventCode: dataDetail.code, face: selectedFace?.toString(), query: searchTerm, page: 1, token: token })
       const dataResponse = data as PhotoList
@@ -78,10 +116,13 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
         dataPhotos: [...dataResponse.photoItems],
         totalPages: dataResponse.totalPages,
       })
-      const newSearchParams = new URLSearchParams({ query: searchTerm, face: selectedFace?.toString() || "" })
+      let newSearchParams: any
+      if (searchTerm && ! selectedFace) {
+        newSearchParams = new URLSearchParams({ query: searchTerm ?? '', page: String(1) })
+      }
+      newSearchParams = new URLSearchParams({ query: searchTerm ?? '', face: selectedFace?.toString() || "", page: String(1) })
       window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
       setIsLoading(false)
-      // if (page) router.push(`${pathName}`)
     },
     [dataDetail, token, page]
   )
@@ -162,8 +203,14 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
 
   const goToPage = (page: number) => {
     if (page >= 1 && page <= totalPages) {
-      router.push(`${pathName}?page=${page}`)
       setIsLoading(true)
+      if (searchParams || faceParams) {
+        // const newSearchParams = new URLSearchParams({ query: queryParams, face: faceParams, page: String(page)})
+        // window.history.replaceState(null, "", pathName + "?" + newSearchParams.toString())
+        router.push(`${pathName}?page=${page}&query=${queryParams}&face=${faceParams}`)
+        return
+      }
+      router.push(`${pathName}?page=${page}`)
     }
   }
   const handleClickRightMouse = (e: React.MouseEvent<HTMLDivElement>) => {
@@ -301,7 +348,11 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
           headerInfo={t?.event?.headerNotification || "Notification !"}
         />
         <ModalQR isOpen={isQRModalOpen} onClose={() => setIsQRModalOpen(false)} paymentInfo={paymentInfo} />
-        <ConformPopup isOpen={conform.state} onClose={() => setConform({ faceId: "", state: false })} callBack={handleCallBackDelete} />
+        <ConformPopup isOpen={conform.state} description={t?.event?.deleteText} title={t?.event?.conform} onClose={() => setConform({ faceId: "", state: false })} callBack={handleCallBackDelete} />
+        <ConformPopup isOpen={conformFace.state} description={t?.event?.descriptionBIB} title={t?.event?.titleSearchBIB} onClose={() => {
+          setConformFace({ state: false, searchTermValue: "" })
+          handleOpenModalSearch()
+        }} callBack={() => handleCallBackSearchFace(conformFace.searchTermValue, faceParams)} />
       </div>
     </>
   )

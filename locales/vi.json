@@ -21,7 +21,9 @@
     "notification": "Đây chỉ là ảnh thumbnail, nếu bạn muốn tải ảnh hãy bấm xem ảnh và tải ảnh chất lượng cao nhé!",
     "back":"Quay lại",
     "bought": "Đã mua",
-    "noPhotos" : "Không tìm thấy ảnh"
+    "noPhotos" : "Không tìm thấy ảnh",
+    "titleSearchBIB": "Bạn chưa chọn face vẫn tìm kiếm ",
+    "descriptionBIB": "Bạn chưa chọn khuôn mặt, tìm kiếm kết hợp khuôn mặt sẽ cho thêm kết quả đầy đủ hơn. Bạn có chắc tiếp tục tìm kiếm chỉ theo số BiB không?"
   },
   "login": {
     "title": "Đăng nhập",

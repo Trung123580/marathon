@@ -28,6 +28,8 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
       transCode: transCode
     })
   }
+  console.log(dataHistory)
+  
   return (
     <>
       <section className='mt-10 container mx-auto px-4 max-w-[1400px]'>
@@ -50,15 +52,15 @@ const PageComponent = ({ dataHistory }: { dataHistory: PaymentHistory[] }) => {
               return (
                 <tr key={id} className='bg-white border-b font-medium text-sm text-black border-gray-200'>
                   <th scope='row' className='px-6 py-4 font-medium whitespace-nowrap '>
-                    <Button className="p-0">
+                    <button className={`py-2 px-4 rounded-md text-white ${status === 'PAID' ?'bg-blue-500' : 'bg-primary'}`}>
                       <a target="_blank" className="px-4 w-full h-full flex items-center justify-center" href={contentPreview}>{t?.search.view}</a>
-                     </Button>
+                     </button>
                   </th>
                   <td className='px-6 py-4'>{eventCode}</td>
                   <td className='px-6 py-4'>{finalPrice}</td>
                   <td className='px-6 py-4'>{updatedAt}</td>
                   <td className='px-6 py-4 text-center'>
-                    {status === 'PENDING' ? <Button onClick={() =>handleTransactions({price, transCode})}>{status}</Button> : <span>{status}</span>}
+                    {status === 'PENDING' ? <Button onClick={() =>handleTransactions({price, transCode})}>{status}</Button> : <Button>{status}</Button>}
                   </td>
                 </tr>
               )
