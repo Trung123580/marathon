@@ -185,7 +185,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     setIsLoading(true)
     // const typeBuy = finalKey ? "ITEM" : "LINK"
     if (finalKey === "ITEM") {
-      const { data, status } = await postInitTransaction({ token, eventCode: code, face: faceParams, query: queryParams, items: [publicUrl], type: 'ITEM' })
+      const { data, status } = await postInitTransaction({ token,packageCode: packageCode, eventCode: code, face: faceParams, query: queryParams, items: [publicUrl], type: 'ITEM' })
       // mua 1 ảnh
       if (status) setPaymentInfo({ price: data.price, transCode: data.transCode })
       setIsLoading(false)

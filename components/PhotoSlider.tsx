@@ -66,7 +66,7 @@ const PhotoSlider: React.FC = () => {
               <ChevronRight className='w-6 h-6 text-black' />
             </button>
           </div>}
-          {!isShow ? (
+          {/* {!isShow ? (
             <></>
           ) : (
             <div className='absolute bottom-0 left-0 right-0 bg-black/30 bg-opacity-60 p-4 z-20'>
@@ -115,7 +115,7 @@ const PhotoSlider: React.FC = () => {
                 </Button>
               </div>
             </div>
-          )}
+          )} */}
         </div>
       </div>
     </div>
