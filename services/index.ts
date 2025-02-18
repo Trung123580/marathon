@@ -200,14 +200,33 @@ export const getUserTransactions = async ({token}: { token:string}) => {
         }
     }
 }
-export const postInitTransaction = async ({token, eventCode, query, face, items, type}: {items?: string[], type?: 'ITEM' | 'LINK', query?:string, face?:string, eventCode?:string, token:string}) => {
+export const getPackages = async ({eventCode}: {eventCode:string}) => {
+    try {
+        const response = await axiosInstance.get(`/Main/GetPackages`, {
+            params: {
+                eventCode: eventCode
+            },
+            validateStatus: (status) => status === 200 || status === 204 })
+        return {
+            status: true,
+            data: response.data
+        }
+    } catch (error: any) {
+        return {
+            status: false,
+            data: []
+        }
+    }
+}
+export const postInitTransaction = async ({token, eventCode, query, face, items, type,packageCode}: {packageCode?: string, items?: string[], type?: 'ITEM' | 'LINK', query?:string, face?:string, eventCode?:string, token:string}) => {
     try {
         const response = await axiosInstance.post(`/Main/InitTransaction`,{
             eventCode,
             query,
             face,
             items,
-            type
+            type,
+            packageCode
         }, {
             headers :{
             'Authorization': `Bearer ${token}`

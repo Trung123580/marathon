@@ -11,11 +11,12 @@ import { usePathname, useRouter, useSearchParams } from "next/navigation"
 import { useIsMobile } from "./ui/use-mobile"
 import Loading from "./Loading"
 import { getBase64StringFromDataURL, handleGetCookie, jwtDecodeToken, uuidv4 } from "@/utils/helpers"
-import { getPhotos, getUserFaces, getUserTransactions, postInitTransaction, postRemoveFace, uploadFile } from "@/services"
+import { getPackages, getPhotos, getUserFaces, postInitTransaction, postRemoveFace, uploadFile } from "@/services"
 import ModalQR from "./ModalQR"
 import ConformPopup from "./ConformPopup"
 import WrapperMasonry from "./WrapperMasonry"
 import NotificationPopup from "./NotificationPopup"
+import PackagesPopup from "./PackagesPopup"
 type photoItem = {
   finalKey: string
   id: string
@@ -61,6 +62,11 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     price: 0,
     transCode: "",
   })
+  
+  const [statePackages, setStatePackages] = useState<{data: PackagesItem[], state: boolean}>({
+    data: [],
+    state: false
+  })
 
   const { dataPhotos, totalPages } = statePhoto
   const [isLoading, setIsLoading] = useState(false)
@@ -93,7 +99,12 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     },
     [dataDetail, token, page]
   )
-
+  const handleOpenModalPackages = async (item: PackagesItem) => {
+    const finalKey = item.packageType
+    const packageCode = item.packageCode
+    setStatePackages(prev => ({...prev, state: true}))
+    await handleTransactions({ finalKey: finalKey , packageCode: packageCode})
+  }
   const handleModalSearch = useCallback(
     async (searchTerm?: string, selectedFace?: string | null) => {
       if (!dataDetail) return
@@ -134,8 +145,13 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
   }, [token])
 
   useEffect(() => {
+    (async () => {
+      const {data} = await getPackages({eventCode: code})
+      setStatePackages(prev => ({...prev, data: data.filter((item: PackagesItem) => item.packageType === 'LINK')}))
+    })()
+
     if (token) handleGetUserFaces()
-  }, [token])
+  }, [token, code])
   const handleUpload = async (file: File | null) => {
     if (file) {
       if (!token) {
@@ -159,7 +175,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     setIsSearchModalOpen(true)
   }
 
-  const handleTransactions = async ({ finalKey, publicUrl = "" }: { publicUrl?: string; finalKey?: string }) => {
+  const handleTransactions = async ({ finalKey, publicUrl = "", packageCode }: {packageCode?:string,  publicUrl?: string; finalKey?: string }) => {
     if (!token) {
       router.push('/login')
       return
@@ -175,7 +191,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
       return
     }
     // mua tất cả
-    const { data, status } = await postInitTransaction({ token, eventCode: code, face: faceParams, query: queryParams, type: typeBuy, items: [] })
+    const { data, status } = await postInitTransaction({ token, packageCode: packageCode, eventCode: code, face: faceParams, query: queryParams, type: typeBuy, items: [] })
     if (status) setPaymentInfo({ price: data.price, transCode: data.transCode })
     setIsLoading(false)
   }
@@ -261,7 +277,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
             <p className="leading-8" dangerouslySetInnerHTML={{ __html: dataDetail?.description as string }}></p>
           </div>
           <div className='flex space-x-4'>
-            {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => handleTransactions({ finalKey: "" })}>{t?.event?.registerNow || "Buy this result"}</Button>}
+            {!!dataPhotos.length && (!!queryParams || !!faceParams) && <Button onClick={() => setStatePackages(prev => ({...prev, state: true}))}>{t?.event?.registerNow || "Buy this result"}</Button>}
             <Button onClick={handleOpenModalSearch}>
               <Search className='w-4 h-4 mr-2' />
               {t?.search?.searchPhotos || "Search Photos"}
@@ -344,6 +360,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
           setConformFace({ state: false, searchTermValue: "" })
           handleOpenModalSearch()
         }} callBack={() => handleCallBackSearchFace(conformFace.searchTermValue, faceParams)} />
+        <PackagesPopup dataPackages={statePackages.data} callBack={handleOpenModalPackages} isOpen={statePackages.state} onClose={() => setStatePackages(prev => ({...prev,state: false}))}/>
       </div>
     </>
   )

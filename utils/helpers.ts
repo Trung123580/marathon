@@ -17,7 +17,10 @@ export const handleDeleteCookie = ({ key }: { key: string }) => {
 export const uuidv4 = () => {
   return '10000000-1000-4000-8000-100000000000'.replace(/[018]/g, (c) =>
     (+c ^ (crypto.getRandomValues(new Uint8Array(1))[0] & (15 >> (+c / 4)))).toString(16)
-  );
+  )
+}
+export const formatNumber = (num: number) => {
+  return num ? num.toString().replace(/(\d)(?=(\d{3})+(?!\d))/g, '$1.') : '0'
 }
 export const getBase64StringFromDataURL = (file: File) => {
   return new Promise<string>((resolve) => {
