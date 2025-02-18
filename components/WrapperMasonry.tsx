@@ -64,6 +64,8 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
       NativeFancybox.destroy()
     }
   }, [])
+  // https://cdn.timanh.vn/ultra-trail-cao-bang-2024-240802/videos/10-preview.mp4 
+  // /videos/ => nếu 
   return (
     <ResponsiveMasonry className='' columnsCountBreakPoints={{ 350: 1, 750: 2, 900: 3, 1024: 4 }}>
       <Masonry
@@ -73,25 +75,38 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
           cursor: "pointer",
           width: "100%",
         }}>
-        {data.map((photo: any) => (
-          <div key={photo.id} className='relative group' onContextMenu={onClickRightMouse}>
-            <a data-fancybox='gallery' className='flex justify-center' href={photo.publicUrl}>
-              <Image src={photo.publicThumbUrl} className='object-contain rounded-lg' priority quality={100} alt='' width={500} height={500} />
-            </a>
-            {!!photo?.isPaid ? (
-              <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-blue-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
-            ) : (
-              <button onClick={() => onBuy({finalKey: 'ITEM', publicUrl: photo.publicUrl})} className=' md:hidden text-white showAnimation group-hover:block w-full absolute bottom-0 left-1/2 -translate-x-1/2  bg-red-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>
-                {t?.search?.buy}
-              </button>
-            )}
-            {/* {!!photo?.isUser ? (
-              <div className='absolute top-0 right-0  p-1 ' onClick={() => onRemoveImage(photo.finalKey)}>
-                <IoIosClose size={25} className='bg-black/85 hover:bg-black duration-300 rounded-full text-white' />
-              </div>
-            ) : null} */}
-          </div>
-        ))}
+        {data.map((photo: any) => {
+          const isVideo = photo.publicThumbUrl.includes('/videos') 
+          return (
+            <div key={photo.id} className='relative group' onContextMenu={onClickRightMouse}>
+              <a data-fancybox='gallery' className='flex justify-center' href={photo.publicUrl}>
+                <Image src={photo.publicThumbUrl} className='object-contain rounded-lg' priority quality={100} alt='' width={500} height={500} />
+              </a>
+              {!!photo?.isPaid ? (
+                <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-blue-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
+              ) : (
+                <button
+                  onClick={() => onBuy({ finalKey: "ITEM", publicUrl: photo.publicUrl })}
+                  className=' md:hidden text-white showAnimation group-hover:block w-full absolute bottom-0 left-1/2 -translate-x-1/2  bg-red-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>
+                  {t?.search?.buy}
+                </button>
+              )}
+              {isVideo && (
+                <button className='absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2'>
+                  <svg xmlns='http://www.w3.org/2000/svg' width={24} hanging={24} viewBox='0 0 384 512'>
+                    <path fill="#ef4444" d='M73 39c-14.8-9.1-33.4-9.4-48.5-.9S0 62.6 0 80L0 432c0 17.4 9.4 33.4 24.5 41.9s33.7 8.1 48.5-.9L361 297c14.3-8.7 23-24.2 23-41s-8.7-32.2-23-41L73 39z' />
+                  </svg>
+                </button>
+              )}
+              {/* {!!photo?.isUser ? (
+                <div className='absolute top-0 right-0  p-1 ' onClick={() => onRemoveImage(photo.finalKey)}>
+                  <IoIosClose size={25} className='bg-black/85 hover:bg-black duration-300 rounded-full text-white' />
+                </div>
+              ) : null} */}
+            </div>
+          )
+        })}
+       
       </Masonry>
     </ResponsiveMasonry>
   )
