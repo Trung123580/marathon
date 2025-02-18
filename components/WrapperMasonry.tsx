@@ -7,12 +7,12 @@ import useTranslations from "@/hooks/useTranslations"
 import Image from "next/image"
 // import { IoIosClose, IoIosCloseCircle } from 'react-icons/io'
 type photoItem = {
-  finalKey: "LINK" | "ITEM"
+  finalKey: string
   id: string
   publicThumbUrl: string
   publicUrl: string
 }
-const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey, publicUrl }: { publicUrl?: string; finalKey?: string }) => void; data: photoItem[]; onClickRightMouse: (e: React.MouseEvent<HTMLDivElement>) => void }) => {
+const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey, publicUrl,packageCode }: {packageCode:string, publicUrl?: string; finalKey?: string }) => void; data: photoItem[]; onClickRightMouse: (e: React.MouseEvent<HTMLDivElement>) => void }) => {
   const { t }: { t: any } = useTranslations()
 
   const downloadImage = async () => {
@@ -86,7 +86,10 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
                 <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-blue-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
               ) : (
                 <button
-                  onClick={() => onBuy({ finalKey: "ITEM", publicUrl: photo.publicUrl })}
+                  onClick={() => {
+                    const packageCode = isVideo ? 'VIDEOITEM1' : 'PHOTOITEM1'
+                    onBuy({ finalKey: "ITEM", publicUrl: photo.publicUrl, packageCode: packageCode })
+                  }}
                   className=' md:hidden text-white showAnimation group-hover:block w-full absolute bottom-0 left-1/2 -translate-x-1/2  bg-red-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>
                   {t?.search?.buy}
                 </button>
