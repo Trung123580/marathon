@@ -67,7 +67,8 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     data: [],
     state: false
   })
-
+  console.log(statePackages.data);
+  
   const { dataPhotos, totalPages } = statePhoto
   const [isLoading, setIsLoading] = useState(false)
   const [facesData, setFacesData] = useState([])
@@ -103,7 +104,7 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     const finalKey = item.packageType
     const packageCode = item.packageCode
     setStatePackages(prev => ({...prev, state: true}))
-    await handleTransactions({ finalKey: finalKey , packageCode: packageCode})
+    await handleTransactions({ finalKey: finalKey , packageCode: packageCode, })
   }
   const handleModalSearch = useCallback(
     async (searchTerm?: string, selectedFace?: string | null) => {
@@ -182,16 +183,16 @@ export default function EventDetail({ dataDetail, dataPhotoList, page, code }: {
     }
     setIsQRModalOpen(true)
     setIsLoading(true)
-    const typeBuy = finalKey ? "ITEM" : "LINK"
-    if (typeBuy === "ITEM") {
-      const { data, status } = await postInitTransaction({ token, eventCode: code, face: faceParams, query: queryParams, items: [publicUrl], type: typeBuy })
+    // const typeBuy = finalKey ? "ITEM" : "LINK"
+    if (finalKey === "ITEM") {
+      const { data, status } = await postInitTransaction({ token, eventCode: code, face: faceParams, query: queryParams, items: [publicUrl], type: 'ITEM' })
       // mua 1 ảnh
       if (status) setPaymentInfo({ price: data.price, transCode: data.transCode })
       setIsLoading(false)
       return
     }
     // mua tất cả
-    const { data, status } = await postInitTransaction({ token, packageCode: packageCode, eventCode: code, face: faceParams, query: queryParams, type: typeBuy, items: [] })
+    const { data, status } = await postInitTransaction({ token, packageCode: packageCode, eventCode: code, face: faceParams, query: queryParams, type: 'LINK', items: [] })
     if (status) setPaymentInfo({ price: data.price, transCode: data.transCode })
     setIsLoading(false)
   }

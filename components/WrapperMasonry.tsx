@@ -7,7 +7,7 @@ import useTranslations from "@/hooks/useTranslations"
 import Image from "next/image"
 // import { IoIosClose, IoIosCloseCircle } from 'react-icons/io'
 type photoItem = {
-  finalKey: string
+  finalKey: "LINK" | "ITEM"
   id: string
   publicThumbUrl: string
   publicUrl: string
