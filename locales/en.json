@@ -12,7 +12,7 @@
     "date": "Date",
     "description": "Description",
     "registerNow": "Buy this result",
-    "photos": "Event Medias",
+    "photos": "Event Media",
     "notFound": "Event not found",
     "qrtitle": "QR Payment",
     "conform": "Confirm delete ?",
@@ -52,9 +52,9 @@
     "login": "Login",
     "register": "Register",
     "logout": "Logout",
-    "changepassword": "ChangePassword",
-    "forgotpassword": "ForgotPassword",
-    "historyPayment": "HistoryPayment"
+    "changepassword": "Change Password",
+    "forgotpassword": "Forgot Password",
+    "historyPayment": "History Payment"
   },
   "search": {
     "selectEvents": "Select or search events",

@@ -79,8 +79,8 @@ const WrapperMasonry = ({ data, onClickRightMouse, onBuy }: { onBuy: ({ finalKey
           const isVideo = photo.publicThumbUrl.includes('/videos') 
           return (
             <div key={photo.id} className='relative group' onContextMenu={onClickRightMouse}>
-              <a data-fancybox='gallery' id="fancybox" className='flex justify-center' href={photo.publicUrl}>
-                <Image src={photo.publicThumbUrl} className='object-contain rounded-lg' priority quality={100} alt='' width={500} height={500} />
+              <a data-fancybox='gallery' id="fancybox" className='flex justify-center  w-[330px] h-[220px]' href={photo.publicUrl}>
+                <Image src={photo.publicThumbUrl} className={`${isVideo ? 'object-cover':'object-contain'} rounded-lg`} priority quality={100} alt='' width={500} height={500} />
               </a>
               {!!photo?.isPaid ? (
                 <span className='text-white w-full text-center showAnimation group-hover:block absolute bottom-0 left-1/2 -translate-x-1/2  bg-blue-500 py-1 text-sm rounded-bl-lg rounded-br-lg'>{t?.event?.bought}</span>
